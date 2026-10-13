@@ -231,6 +231,8 @@ textarea { resize: vertical; min-height: 64px; }
 .btn.ghost { background: #fff; color: var(--ink); border: 1.5px solid var(--line); padding: 11px 20px; font-size: 14.5px; }
 /* hidden must win over .btn's inline-flex display */
 .btn[hidden] { display: none !important; }
+/* global guard: hidden must beat every component display rule (.demo-tag, .kv, modals) */
+[hidden] { display: none !important; }
 .btn.ghost:hover { border-color: var(--brand); color: var(--brand-deep); }
 .btn.small { padding: 9px 16px; font-size: 13.5px; }
 .btn.danger-text { background: none; color: var(--bad); padding: 9px 12px; font-size: 13.5px; font-weight: 650; box-shadow: none; }
