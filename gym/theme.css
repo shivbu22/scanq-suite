@@ -1,0 +1,27 @@
+/* GymQ theme — lime & white over the shared ScanQ design system. */
+:root {
+  --brand: #65a30d;
+  --brand-deep: #4d7c0f;
+  --brand-soft: #ecf7d9;
+  --brand-mist: #f7fcec;
+  --board: #1f2a0e;
+  --board-ink: #eef7d9;
+  --board-dim: #b8d97e;
+  --board-line: #3f5218;
+}
+
+/* overdue fee highlight */
+.fee-overdue { color: #b3261e; font-weight: 700; }
+.fee-ok { color: var(--brand-deep); font-weight: 600; }
+.st.overdue { background: #fdecec; color: #b3261e; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(101, 163, 13, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(101, 163, 13, 0.28); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(77, 124, 15, 0.3); }
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

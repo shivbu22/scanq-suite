@@ -1,0 +1,41 @@
+/* PharmaQ theme — emerald & white over the shared ScanQ design system. */
+:root {
+  --brand: #059669;
+  --brand-deep: #047857;
+  --brand-soft: #d1fae5;
+  --brand-mist: #ecfdf5;
+  --board: #052e22;
+  --board-ink: #d1fae5;
+  --board-dim: #6ee7b7;
+  --board-line: #065f46;
+}
+
+/* status chips for this app's statuses */
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.active { background: var(--warn-soft); color: var(--warn); }
+.st.done { background: var(--brand-deep); color: #fff; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(5, 150, 105, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(5, 150, 105, 0.28); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(4, 120, 87, 0.3); }
+
+/* refill toggle row */
+.togglerow { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.t-label { font-size: 14.5px; font-weight: 600; }
+
+/* medicine list on the token view */
+.medlist { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.medlist li {
+  background: var(--brand-mist);
+  border: 1px solid var(--brand-soft);
+  border-radius: 10px;
+  padding: 9px 12px;
+  font-size: 14.5px; font-weight: 600;
+}
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

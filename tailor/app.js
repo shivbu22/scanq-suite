@@ -1,15 +1,16 @@
 /* TailorTrack — customer portal logic. */
 import {
   cfg, isConfigured, isDemo, getClient, todayISO,
-  esc, queueApi,
+  esc, queueApi, demoStore,
 } from "../shared/sq.js";
+import { demoRows } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const C = cfg();
 const SL = C.STATUS_LABELS || {};
 
-const state = { row: null, channel: null, demoNext: 7 };
+const state = { row: null, channel: null };
 
 function toast(msg) {
   const t = $("#toast");
@@ -70,11 +71,18 @@ $("#orderForm").addEventListener("submit", async (e) => {
     let row;
     if (isDemo() || !isConfigured()) {
       await fakeProgress(bar);
+      // Offline preview: write to the shared demo store so the dashboard
+      // (even in another tab) sees this order, like the real backend.
+      const store = demoStore(C.TABLE || "tailor_queue", demoRows);
+      const rows = store.read();
+      const token = rows.reduce((m, r) => Math.max(m, r.token || 0), 0) + 1;
       row = {
-        id: "demo-me", token: state.demoNext++, customer_name: name,
+        id: "demo-" + Date.now(), token, customer_name: name,
         phone: phone || null, status: "queued",
         details, note: note || null, created_at: new Date().toISOString(),
       };
+      store.insert(row);
+      state.demoStore = store;
     } else {
       const sb = await getClient();
       const api = queueApi(C.APP, C.TABLE);
@@ -132,7 +140,19 @@ function showToken(row) {
   renderStatus(row);
   window.scrollTo({ top: 0 });
 
-  if (isDemo()) { simulateDemo(); return; }
+  if (isDemo()) {
+    // Follow this order live via the shared demo store — the dashboard
+    // (even in another tab) drives status changes, like the real backend.
+    const store = state.demoStore || demoStore(C.TABLE || "tailor_queue", demoRows);
+    store.onChange((rows) => {
+      const r = rows.find((x) => x.id === state.row.id);
+      if (r && r.status !== state.row.status) {
+        state.row = r;
+        renderStatus(r);
+      }
+    });
+    return;
+  }
   if (!isConfigured()) return;
   getClient().then((sb) => {
     const api = queueApi(C.APP, C.TABLE);
@@ -175,17 +195,7 @@ function renderStatus(row) {
   }
 }
 
-/* demo: walk the order through the statuses so the preview feels alive */
-function simulateDemo() {
-  const seq = ["active", "done"];
-  let i = 0;
-  const h = setInterval(() => {
-    if (i >= seq.length || $("#view-token").hidden) { clearInterval(h); return; }
-    state.row.status = seq[i++];
-    renderStatus(state.row);
-    if (state.row.status === "done") clearInterval(h);
-  }, 9000);
-}
+/* token auto-advance removed: in the linked demo the dashboard drives status */
 
 $("#btnAgain").onclick = () => {
   state.channel?.unsubscribe?.();

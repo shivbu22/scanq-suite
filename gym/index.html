@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>GymQ — Member Check-in</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>GymQ</strong><small><span data-shop-name>Iron Paradise Gym</span> · Member check-in</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ CHECK-IN FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Scan in.<br />Train hard.</h1>
+      <p class="sub">Enter your name and phone to check in. New here? We will
+        create your member profile automatically.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Check in</strong><span>scan the QR at the door</span></li>
+        <li><span class="stepn">2</span><strong>Train</strong><span>your visit is logged</span></li>
+        <li><span class="stepn">3</span><strong>Stay regular</strong><span>consistency builds muscle</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> 5-second check-in</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="checkinForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Rohan Khanna" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field" data-f="phone">
+          <label class="lbl" for="inPhone">Phone</label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="Your membership phone number" />
+          <div class="err">Please enter your phone number.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Check in</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ CONFIRMATION ============ -->
+    <main id="view-done" hidden>
+      <div class="card token-hero">
+        <div class="k">CHECKED IN</div>
+        <div class="n" id="checkTime" style="font-size:64px">–</div>
+        <div class="pos" id="checkMsg"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Plan</span><span class="v" id="dPlan"></span></div>
+        <div class="kv"><span class="k">Fee due</span><span class="v" id="dFee"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Check in someone else</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>GymQ</span>
+      <a href="admin.html">Gym staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+/* MenuQ theme — warm orange-red over the shared ScanQ design system. */
+:root {
+  --brand: #C2410C;
+  --brand-deep: #8A2F09;
+  --brand-soft: #FDEEDF;
+  --brand-mist: #FFF8F1;
+  --board: #3A1707;
+  --board-ink: #FDEAD8;
+  --board-dim: #F2B98C;
+  --board-line: #6E3517;
+}
+
+/* menu picker rows with qty steppers */
+.mrow {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line);
+}
+.mrow:last-child { border-bottom: none; }
+.mname { font-weight: 700; font-size: 15px; }
+.mprice { color: var(--muted); font-size: 13.5px; margin-top: 2px; }
+.stepper { display: flex; align-items: center; gap: 10px; flex: none; }
+.stepper button {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid var(--line); background: #fff;
+  font-size: 18px; font-weight: 700; color: var(--brand-deep);
+  line-height: 1; cursor: pointer;
+}
+.stepper button:active { background: var(--brand-soft); }
+.stepper .qty { min-width: 22px; text-align: center; font-weight: 700; font-size: 16px; }
+.order-total {
+  display: flex; justify-content: space-between;
+  font-weight: 700; font-size: 16px; padding: 14px 0 2px;
+}
+.order-items { margin: 4px 0; }
+.order-items .oi {
+  display: flex; justify-content: space-between; gap: 10px;
+  font-size: 14.5px; padding: 5px 0; border-bottom: 1px dashed var(--line);
+}
+.order-items .oi:last-child { border-bottom: none; }
+.order-items .oi .p { color: var(--muted); }
+
+/* status chips for this app's statuses */
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.active { background: var(--warn-soft); color: var(--warn); }
+.st.done { background: var(--brand-deep); color: #fff; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(194, 65, 12, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(194, 65, 12, 0.28); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(138, 47, 9, 0.3); }
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

@@ -1,4 +1,4 @@
-# ScanQ Suite — seven free counter tools for local businesses
+# ScanQ Suite — seventeen free counter tools for local businesses
 
 A customer scans a QR code at the counter, does everything from their phone
 browser, and the shop owner runs the counter from a live dashboard.
@@ -17,6 +17,16 @@ No app to install. No cost to run (Supabase + Vercel free tiers).
 | [TailorTrack](tailor/) | Tailors | Order tracking — cutting → stitching → ready, live for the customer |
 | [ServiceQ](service/) | Repair shops | Job cards — photo + issue in, live repair status out |
 | [FeedbackQ](feedback/) | Any shop | QR feedback box — ratings land straight on the owner's screen |
+| [MenuQ](menu/) | Restaurants | Table ordering — guests order from their phones, kitchen gets tickets |
+| [CarWashQ](carwash/) | Car washes | Wash queue — customers watch their car's stage go live |
+| [LaundryQ](laundry/) | Laundries | Drop tracking with pickup codes and ready alerts |
+| [GymQ](gym/) | Gyms | QR check-in — live attendance and fee-defaulter watch |
+| [PharmaQ](pharma/) | Pharmacies | Medicine order queue with refill reminders |
+| [EventQ](event/) | Events | RSVP headcount plus QR entry-gate check-in |
+| [PhotoQ](photo/) | Photo studios | Print and album order tracking |
+| [DairyQ](dairy/) | Milk vendors | Subscriptions — daily quantity changes, monthly bill auto-made |
+| [CyberQ](cyber/) | Print shops | Print-job queue — upload a document, get a token |
+| [SlotQ](slot/) | Consultants | Bookable time slots with no-show tracking |
 
 Each app has a customer page (`index.html`), an owner dashboard (`admin.html`,
 passcode-gated), and a counter TV board (`admin.html?display=1`, queue apps).

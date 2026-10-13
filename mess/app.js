@@ -1,7 +1,8 @@
 /* MessCount — customer RSVP logic. No tokens here: one tap = one headcount. */
 import {
-  cfg, isConfigured, isDemo, getClient, todayISO, esc,
+  cfg, isConfigured, isDemo, getClient, todayISO, esc, demoStore,
 } from "../shared/sq.js";
+import { demoRows } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -81,6 +82,24 @@ $("#rsvpForm").addEventListener("submit", async (e) => {
     if (isDemo() || !isConfigured()) {
       await new Promise((res) => setTimeout(res, 500));
       bar.style.width = "100%";
+      if (isDemo()) {
+        // Write the RSVP to the shared demo store so the kitchen dashboard
+        // (even in another tab) sees this tap, like the real backend.
+        const store = demoStore(TABLE(), demoRows);
+        const rows = store.read();
+        const dup = rows.find((r) =>
+          (r.name || "").toLowerCase() === name.toLowerCase() &&
+          r.meal === state.meal && r.rsvp_date === todayISO());
+        if (dup) {
+          store.update(dup.id, { eating: state.eating, created_at: new Date().toISOString() });
+        } else {
+          store.insert({
+            id: "demo-" + Date.now(), name,
+            meal: state.meal, eating: state.eating, rsvp_date: todayISO(),
+            created_at: new Date().toISOString(),
+          });
+        }
+      }
     } else {
       const sb = await getClient();
       const { error } = await sb.from(TABLE()).insert([{

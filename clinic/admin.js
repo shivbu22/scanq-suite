@@ -1,8 +1,10 @@
 /* ClinicQ — clinic staff dashboard logic. */
 import {
   cfg, isConfigured, isDemo, getClient, todayISO,
-  esc, timeAgo, chime, sha256hex, queueApi,
+  esc, timeAgo, chime, sha256hex, queueApi, demoStore,
+  getPasscodeHash, openPasscodeModal,
 } from "../shared/sq.js";
+import { demoRows } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -81,7 +83,7 @@ async function tryUnlock() {
   const v = $("#inPass").value.trim();
   if (!v) return;
   const h = await sha256hex(v);
-  const want = cfg().PASSCODE_HASH || "";
+  const want = await effectiveHash();
   if (h === want) {
     sessionStorage.setItem("sq_admin", "1");
     showDash();
@@ -90,6 +92,21 @@ async function tryUnlock() {
     $("#inPass").value = "";
     $("#inPass").focus();
   }
+}
+
+/* The passcode hash lives in the DB (changeable from the dashboard);
+   fall back to config.js when offline/demo/unconfigured. */
+async function effectiveHash() {
+  if (state.passHash) return state.passHash;
+  const fallback = cfg().PASSCODE_HASH || "";
+  if (DEMO || !isConfigured()) return fallback;
+  try {
+    const sb = await getClient();
+    state.passHash = await getPasscodeHash(sb, cfg().APP || "clinic", fallback);
+  } catch (_) {
+    state.passHash = fallback;
+  }
+  return state.passHash;
 }
 
 async function showDash() {
@@ -108,6 +125,19 @@ function bindDash() {
       renderDash();
     }));
   $("#btnNext").onclick = callNext;
+  const btnPass = $("#btnPasscode");
+  if (btnPass) {
+    if (DEMO || !isConfigured()) {
+      btnPass.hidden = true; // nowhere to save it without the backend
+    } else {
+      btnPass.onclick = () => openPasscodeModal({
+        app: cfg().APP || "clinic",
+        getSb: getClient,
+        fallbackHash: cfg().PASSCODE_HASH || "",
+        toast,
+      });
+    }
+  }
   $("#btnMute").onclick = () => {
     state.muted = !state.muted;
     $("#btnMute").textContent = state.muted ? "Sound off" : "Sound on";
@@ -118,7 +148,22 @@ function bindDash() {
 
 async function boot(after) {
   if (DEMO || !isConfigured()) {
-    state.rows = demoRows();
+    // Offline preview: rows live in the shared demo store so the patient
+    // page (even in another tab) and the dashboard see each other.
+    state.store = demoStore(cfg().TABLE || "clinic_queue", demoRows);
+    state.rows = state.store.read();
+    state.knownIds = new Set(state.rows.map((r) => r.id));
+    state.store.onChange((rows) => {
+      const fresh = rows.filter((r) => !state.knownIds.has(r.id));
+      state.rows = rows;
+      fresh.forEach((r) => state.knownIds.add(r.id));
+      if (BOARD) { renderBoard(); return; }
+      renderDash(fresh.length ? fresh[0].id : null);
+      if (fresh.length) {
+        if (!state.muted) chime();
+        toast(`Token ${fresh[0].token} — ${fresh[0].customer_name}`);
+      }
+    });
   } else {
     state.sb = await getClient();
     try {
@@ -232,6 +277,7 @@ async function onCardAction(e) {
   try {
     if (DEMO || !isConfigured()) {
       row.status = next;
+      state.store?.update(row.id, { status: next });
     } else {
       await api.update(state.sb, row.id, { status: next });
       row.status = next; // optimistic; realtime echo will confirm
@@ -252,7 +298,10 @@ async function callNext() {
     .sort((a, b) => a.token - b.token)[0];
   if (!next) { toast("Nobody is waiting."); return; }
   try {
-    if (DEMO || !isConfigured()) next.status = "active";
+    if (DEMO || !isConfigured()) {
+      next.status = "active";
+      state.store?.update(next.id, { status: "active" });
+    }
     else {
       await api.update(state.sb, next.id, { status: "active" });
       next.status = "active";
@@ -268,37 +317,25 @@ async function callNext() {
   }
 }
 
-/* ---------- demo data (fully offline preview) ---------- */
-function demoRows() {
-  const now = Date.now();
-  const ago = (m) => new Date(now - m * 60000).toISOString();
-  const mk = (id, token, name, phone, department, status, m) => ({
-    id, token, customer_name: name, phone,
-    details: { department }, status, created_at: ago(m),
-  });
-  return [
-    mk("demo-9", 9, "Meera Iyer", "", "General Medicine", "done", 95),
-    mk("demo-10", 10, "Dev Patel", "98220 44510", "Orthopedics", "active", 40),
-    mk("demo-11", 11, "Priya Nair", "", "Eye Care", "active", 25),
-    mk("demo-12", 12, "Aarav Mehta", "98110 22334", "General Medicine", "queued", 12),
-    mk("demo-13", 13, "Sana Sheikh", "", "Pediatrics", "queued", 7),
-    mk("demo-14", 14, "Rohit Kumar", "98901 77882", "Dental", "queued", 3),
-  ];
-}
+/* demo seed data lives in ./demo.js (shared with the patient page) */
 
-/* demo: a new patient walks in a few seconds after opening the preview */
+/* demo: a new patient walks in a few seconds after opening the preview.
+   Goes through the shared store so every open tab sees the arrival. */
 function simulateArrival() {
   setTimeout(() => {
     if ($("#view-dash").hidden) return;
-    const n = Math.max(...state.rows.map((r) => r.token)) + 1;
+    const rows = state.store.read();
+    const n = rows.reduce((m, r) => Math.max(m, r.token || 0), 0) + 1;
     const row = {
       id: "demo-new", token: n, customer_name: "Kavya Reddy", phone: "",
       details: { department: "General Medicine" }, status: "queued",
       created_at: new Date().toISOString(),
     };
-    state.rows.push(row);
+    state.store.insert(row);
+    state.rows = state.store.read();
+    state.knownIds.add(row.id);
     if (!state.muted) chime();
-    renderDash("demo-new");
+    renderDash(row.id);
     toast(`Token ${n} — Kavya Reddy (demo arrival)`);
   }, 6000);
 }

@@ -1,15 +1,17 @@
 /* FeedbackQ — shop owner dashboard logic (ratings inbox). */
 import {
   cfg, isConfigured, isDemo, getClient,
-  esc, timeAgo, chime, sha256hex,
+  esc, timeAgo, chime, sha256hex, demoStore,
+  getPasscodeHash, openPasscodeModal,
 } from "../shared/sq.js";
+import { demoFeedback } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const DEMO = isDemo();
 const TABLE = cfg().TABLE || "feedback";
 
-const state = { rows: [], tab: "new", muted: false, sb: null };
+const state = { rows: [], tab: "new", muted: false, sb: null, store: null, knownIds: new Set() };
 
 const STATUS_LABEL = { new: "New", acknowledged: "Acknowledged", resolved: "Resolved" };
 
@@ -41,7 +43,8 @@ async function tryUnlock() {
   const v = $("#inPass").value.trim();
   if (!v) return;
   const h = await sha256hex(v);
-  if (h === (cfg().PASSCODE_HASH || "")) {
+  const want = await effectiveHash();
+  if (h === want) {
     sessionStorage.setItem("fq_admin", "1");
     showDash();
   } else {
@@ -49,6 +52,21 @@ async function tryUnlock() {
     $("#inPass").value = "";
     $("#inPass").focus();
   }
+}
+
+/* The passcode hash lives in the DB (changeable from the dashboard);
+   fall back to config.js when offline/demo/unconfigured. */
+async function effectiveHash() {
+  if (state.passHash) return state.passHash;
+  const fallback = cfg().PASSCODE_HASH || "";
+  if (DEMO || !isConfigured()) return fallback;
+  try {
+    const sb = await getClient();
+    state.passHash = await getPasscodeHash(sb, cfg().APP || "feedback", fallback);
+  } catch (_) {
+    state.passHash = fallback;
+  }
+  return state.passHash;
 }
 
 async function showDash() {
@@ -65,6 +83,19 @@ function bindDash() {
       $$(".tabs button").forEach((x) => x.setAttribute("aria-selected", x === b ? "true" : "false"));
       renderDash();
     }));
+  const btnPass = $("#btnPasscode");
+  if (btnPass) {
+    if (DEMO || !isConfigured()) {
+      btnPass.hidden = true; // nowhere to save it without the backend
+    } else {
+      btnPass.onclick = () => openPasscodeModal({
+        app: cfg().APP || "feedback",
+        getSb: getClient,
+        fallbackHash: cfg().PASSCODE_HASH || "",
+        toast,
+      });
+    }
+  }
   $("#btnMute").onclick = () => {
     state.muted = !state.muted;
     $("#btnMute").textContent = state.muted ? "Sound off" : "Sound on";
@@ -75,7 +106,21 @@ function bindDash() {
 
 async function boot(after) {
   if (DEMO || !isConfigured()) {
-    state.rows = demoFeedback();
+    // Offline preview: rows live in the shared demo store so the customer
+    // page (even in another tab) and the dashboard see each other.
+    state.store = demoStore(TABLE, demoFeedback);
+    state.rows = state.store.read();
+    state.knownIds = new Set(state.rows.map((r) => r.id));
+    state.store.onChange((rows) => {
+      const fresh = rows.filter((r) => !state.knownIds.has(r.id));
+      state.rows = rows;
+      fresh.forEach((r) => state.knownIds.add(r.id));
+      renderDash(fresh.length ? fresh[0].id : null);
+      if (fresh.length) {
+        if (!state.muted) chime();
+        toast(`New feedback — ${fresh[0].rating} stars from ${fresh[0].name || "Anonymous"}`);
+      }
+    });
   } else {
     state.sb = await getClient();
     const { data, error } = await state.sb.from(TABLE)
@@ -108,19 +153,6 @@ function applyChange(p) {
   } else if (p.eventType === "DELETE") {
     state.rows = state.rows.filter((r) => r.id !== p.old.id);
   }
-}
-
-/* ---------- demo data (offline preview) ---------- */
-function demoFeedback() {
-  const ago = (mins) => new Date(Date.now() - mins * 60000).toISOString();
-  return [
-    { id: "d1", rating: 5, category: "Service", comment: "Printed my project report in 10 minutes. Super quick.", name: "Aarav Mehta", status: "new", created_at: ago(12) },
-    { id: "d2", rating: 4, category: "Quality", comment: "Good print quality, binding was a little loose.", name: "Sana Sheikh", status: "new", created_at: ago(45) },
-    { id: "d3", rating: 2, category: "Staff", comment: "Had to wait even though the shop was empty.", name: "Rohit Kumar", status: "acknowledged", created_at: ago(130) },
-    { id: "d4", rating: 5, category: "Price", comment: "Cheapest colour prints in the area.", name: null, status: "acknowledged", created_at: ago(200) },
-    { id: "d5", rating: 3, category: "Cleanliness", comment: "Counter area could be tidier.", name: "Priya Nair", status: "resolved", created_at: ago(320) },
-    { id: "d6", rating: 1, category: "Service", comment: "Came at lunch time and the shop was closed.", name: null, status: "resolved", created_at: ago(480) },
-  ];
 }
 
 /* ---------- rendering ---------- */
@@ -204,6 +236,7 @@ async function onCardAction(e) {
   try {
     if (DEMO || !isConfigured()) {
       row.status = next;
+      state.store?.update(row.id, { status: next });
     } else {
       const { error } = await state.sb.from(TABLE).update({ status: next }).eq("id", row.id);
       if (error) throw error;

@@ -1,5 +1,6 @@
 /* FeedbackQ — customer feedback form logic. */
-import { cfg, isConfigured, isDemo, getClient, esc } from "../shared/sq.js";
+import { cfg, isConfigured, isDemo, getClient, esc, demoStore } from "../shared/sq.js";
+import { demoFeedback } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -100,6 +101,14 @@ $("#fbForm").addEventListener("submit", async (e) => {
       if (error) throw new Error("Could not send: " + error.message);
     } else {
       await new Promise((r) => setTimeout(r, 700)); // demo beat
+      // Offline preview: write to the shared demo store so the dashboard
+      // (even in another tab) sees this feedback, like the real backend.
+      const store = demoStore(cfg().TABLE || "feedback", demoFeedback);
+      store.insert({
+        id: "demo-" + Date.now(),
+        ...payload,
+        created_at: new Date().toISOString(),
+      });
     }
     showThanks(state.rating);
   } catch (err) {

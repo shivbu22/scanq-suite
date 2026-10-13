@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>MenuQ — Table Ordering</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>MenuQ</strong><small><span data-shop-name>Sharma Bhojnalaya</span> · Table ordering</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ ORDER FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Hungry?<br />order from your table.</h1>
+      <p class="sub">Pick your dishes, send the order to the kitchen, and relax.
+        We will bring it hot to your table.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Pick dishes</strong><span>tap + to add items</span></li>
+        <li><span class="stepn">2</span><strong>Send order</strong><span>straight to the kitchen</span></li>
+        <li><span class="stepn">3</span><strong>Relax</strong><span>food arrives at your table</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live order status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="tokenForm" class="card stack" novalidate>
+        <div class="field" data-f="table">
+          <label class="lbl" for="inTable">Table number</label>
+          <input type="text" id="inTable" inputmode="numeric" placeholder="e.g. 5" />
+          <div class="err">Please enter your table number.</div>
+        </div>
+
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field" data-f="items">
+          <label class="lbl">Menu — tap + to add</label>
+          <div id="menuList"></div>
+          <div class="order-total"><span>Total</span><span id="orderTotal">₹0</span></div>
+          <div class="err">Please add at least one dish.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Place order</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ ORDER / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR ORDER</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Table</span><span class="v" id="dTable"></span></div>
+        <div style="height:8px"></div>
+        <div class="order-items" id="dItems"></div>
+        <div class="order-total"><span>Total</span><span id="dTotal"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">New order</div><div class="d">Your order is in the kitchen queue</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Preparing</div><div class="d">The kitchen is preparing your food</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Done</div><div class="d">Your food is served. Enjoy your meal.</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Order something more</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>MenuQ</span>
+      <a href="admin.html">Kitchen staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

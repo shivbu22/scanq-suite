@@ -140,3 +140,113 @@ export async function sha256hex(str) {
   }
   return "plain:" + str;
 }
+
+/* ---------- admin passcode (changeable from the dashboard) ----------
+   The sha256 hash lives in the app_settings table so the owner can change
+   it from any device. Same "speed bump, not real security" model as the
+   rest of the anon dashboard. */
+export async function getPasscodeHash(sb, app, fallback) {
+  try {
+    const { data, error } = await sb.from("app_settings")
+      .select("passcode_hash").eq("app", app).maybeSingle();
+    if (!error && data?.passcode_hash) return data.passcode_hash;
+  } catch (_) { /* fall through to config hash */ }
+  return fallback;
+}
+
+export async function setPasscodeHash(sb, app, hash) {
+  const { error } = await sb.from("app_settings")
+    .upsert({ app, passcode_hash: hash }, { onConflict: "app" });
+  if (error) throw error;
+}
+
+/* Opens a "Change passcode" modal. opts: { app, getSb, fallbackHash, toast }.
+   Verifies the current passcode, then writes the new sha256 hash. */
+export function openPasscodeModal({ app, getSb, fallbackHash, toast }) {
+  const overlay = document.createElement("div");
+  overlay.className = "sq-modal-overlay";
+  overlay.innerHTML = `
+    <div class="sq-modal" role="dialog" aria-label="Change passcode">
+      <h3>Change dashboard passcode</h3>
+      <p class="sub">Only someone who knows the current passcode can change it.</p>
+      <div class="field"><label>Current passcode</label>
+        <input type="password" id="pcCur" inputmode="numeric" autocomplete="off" /></div>
+      <div class="field"><label>New passcode (min 4 digits)</label>
+        <input type="password" id="pcNew" inputmode="numeric" autocomplete="new-password" /></div>
+      <div class="field"><label>Confirm new passcode</label>
+        <input type="password" id="pcConf" inputmode="numeric" autocomplete="new-password" /></div>
+      <div class="sq-modal-err" id="pcErr" hidden></div>
+      <div class="sq-modal-actions">
+        <button class="btn ghost" id="pcCancel" type="button">Cancel</button>
+        <button class="btn primary" id="pcSave" type="button">Save new passcode</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const err = (m) => {
+    const e = overlay.querySelector("#pcErr");
+    e.textContent = m; e.hidden = !m;
+  };
+  const close = () => overlay.remove();
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+  overlay.querySelector("#pcCancel").onclick = close;
+  overlay.querySelector("#pcCur").focus();
+  overlay.querySelector("#pcSave").onclick = async () => {
+    const cur = overlay.querySelector("#pcCur").value.trim();
+    const nw = overlay.querySelector("#pcNew").value.trim();
+    const cf = overlay.querySelector("#pcConf").value.trim();
+    err("");
+    if (nw.length < 4) return err("New passcode must be at least 4 characters.");
+    if (nw !== cf) return err("New passcodes do not match.");
+    const btn = overlay.querySelector("#pcSave");
+    btn.disabled = true; btn.textContent = "Saving…";
+    try {
+      const sb = await getSb();
+      const want = await getPasscodeHash(sb, app, fallbackHash);
+      if (await sha256hex(cur) !== want) { err("Current passcode is wrong."); return; }
+      await setPasscodeHash(sb, app, await sha256hex(nw));
+      close();
+      toast("Passcode changed. Use the new one next time you unlock.");
+    } catch (e2) {
+      err("Could not save: " + (e2.message || e2));
+    } finally {
+      btn.disabled = false; btn.textContent = "Save new passcode";
+    }
+  };
+}
+/* Demo store: a shared localStorage "database" so that in ?demo=1 the
+   customer page and the dashboard see each other's rows — even across
+   tabs — the way the real backend links them. The seed is persisted on
+   first read, so every tab shares one consistent demo world. */
+export function demoStore(key, seedFn) {
+  const K = "scanq-demo-v1-" + key;
+  function read() {
+    try {
+      const raw = localStorage.getItem(K);
+      if (raw) return JSON.parse(raw);
+    } catch (_) { /* storage unavailable — fall through to seed */ }
+    const s = seedFn() || [];
+    write(s);
+    return s;
+  }
+  function write(rows) {
+    try { localStorage.setItem(K, JSON.stringify(rows)); } catch (_) { /* ignore */ }
+  }
+  return {
+    read,
+    insert(row) {
+      const rows = read();
+      if (!rows.some((r) => r.id === row.id)) rows.push(row);
+      write(rows);
+    },
+    update(id, patch) {
+      write(read().map((r) => (r.id === id ? { ...r, ...patch } : r)));
+    },
+    onChange(cb) {
+      window.addEventListener("storage", (e) => {
+        if (e.key === K) {
+          try { cb(JSON.parse(e.newValue || "[]")); } catch (_) { /* ignore */ }
+        }
+      });
+    },
+  };
+}

@@ -1,8 +1,10 @@
 /* TailorTrack — shop owner dashboard logic. */
 import {
   cfg, isConfigured, isDemo, getClient, todayISO,
-  esc, timeAgo, chime, sha256hex, queueApi,
+  esc, timeAgo, chime, sha256hex, queueApi, demoStore,
+  getPasscodeHash, openPasscodeModal,
 } from "../shared/sq.js";
+import { demoRows } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -94,7 +96,8 @@ async function tryUnlock() {
   const v = $("#inPass").value.trim();
   if (!v) return;
   const h = await sha256hex(v);
-  if (h === (C.PASSCODE_HASH || "")) {
+  const want = await effectiveHash();
+  if (h === want) {
     sessionStorage.setItem("sq_admin", "1");
     showDash();
   } else {
@@ -102,6 +105,21 @@ async function tryUnlock() {
     $("#inPass").value = "";
     $("#inPass").focus();
   }
+}
+
+/* The passcode hash lives in the DB (changeable from the dashboard);
+   fall back to config.js when offline/demo/unconfigured. */
+async function effectiveHash() {
+  if (state.passHash) return state.passHash;
+  const fallback = C.PASSCODE_HASH || "";
+  if (DEMO || !isConfigured()) return fallback;
+  try {
+    const sb = await getClient();
+    state.passHash = await getPasscodeHash(sb, C.APP || "tailor", fallback);
+  } catch (_) {
+    state.passHash = fallback;
+  }
+  return state.passHash;
 }
 
 async function showDash() {
@@ -120,6 +138,19 @@ function bindDash() {
       renderDash();
     }));
   $("#btnNext").onclick = callNext;
+  const btnPass = $("#btnPasscode");
+  if (btnPass) {
+    if (DEMO || !isConfigured()) {
+      btnPass.hidden = true; // nowhere to save it without the backend
+    } else {
+      btnPass.onclick = () => openPasscodeModal({
+        app: C.APP || "tailor",
+        getSb: getClient,
+        fallbackHash: C.PASSCODE_HASH || "",
+        toast,
+      });
+    }
+  }
   $("#btnMute").onclick = () => {
     state.muted = !state.muted;
     $("#btnMute").textContent = state.muted ? "Sound off" : "Sound on";
@@ -130,7 +161,22 @@ function bindDash() {
 
 async function boot(after) {
   if (DEMO || !isConfigured()) {
-    state.rows = demoOrders();
+    // Offline preview: rows live in the shared demo store so the customer
+    // page (even in another tab) and the dashboard see each other.
+    state.store = demoStore(C.TABLE || "tailor_queue", demoRows);
+    state.rows = state.store.read();
+    state.knownIds = new Set(state.rows.map((r) => r.id));
+    state.store.onChange((rows) => {
+      const fresh = rows.filter((r) => !state.knownIds.has(r.id));
+      state.rows = rows;
+      fresh.forEach((r) => state.knownIds.add(r.id));
+      if (BOARD) { renderBoard(); return; }
+      renderDash(fresh.length ? fresh[0].id : null);
+      if (fresh.length) {
+        if (!state.muted) chime();
+        toast(`Order ${fresh[0].token} — ${fresh[0].customer_name}`);
+      }
+    });
   } else {
     state.sb = await getClient();
     const api = queueApi(C.APP, C.TABLE);
@@ -154,8 +200,8 @@ async function boot(after) {
 /* ---------- rendering ---------- */
 function counts() {
   return {
-    queued: state.rows.filter((r) => r.status === "queued").length,
-    active: state.rows.filter((r) => r.status === "active").length,
+    waiting: state.rows.filter((r) => r.status === "queued").length,
+    printing: state.rows.filter((r) => r.status === "active").length,
     done: state.rows.filter((r) => r.status === "done" || r.status === "cancelled").length,
   };
 }
@@ -255,6 +301,7 @@ async function onCardAction(e) {
   try {
     if (DEMO || !isConfigured()) {
       row.status = next;
+      state.store?.update(row.id, { status: next });
     } else {
       await queueApi(C.APP, C.TABLE).update(state.sb, row.id, { status: next });
       // realtime echo will update the UI; optimistic patch for snappiness:
@@ -276,7 +323,10 @@ async function callNext() {
     .sort((a, b) => a.token - b.token)[0];
   if (!next) { toast("Nobody is waiting."); return; }
   try {
-    if (DEMO || !isConfigured()) next.status = "active";
+    if (DEMO || !isConfigured()) {
+      next.status = "active";
+      state.store?.update(next.id, { status: "active" });
+    }
     else {
       await queueApi(C.APP, C.TABLE).update(state.sb, next.id, { status: "active" });
       next.status = "active";
@@ -292,39 +342,26 @@ async function callNext() {
   }
 }
 
-/* ---------- demo data ---------- */
-function demoOrders() {
-  const now = Date.now();
-  const iso = (minAgo) => new Date(now - minAgo * 60000).toISOString();
-  return [
-    { id: "demo-1", token: 4, customer_name: "Aarav Mehta", phone: "98200 11223", status: "active",
-      details: { garment: "Kurta", measurements: { chest: "40", waist: "", length: "42" }, delivery: "2026-10-18" },
-      note: "Festive wear", created_at: iso(42) },
-    { id: "demo-2", token: 5, customer_name: "Sana Sheikh", phone: "", status: "queued",
-      details: { garment: "Blouse", measurements: { chest: "36", waist: "30", length: "" }, delivery: "2026-10-20" },
-      note: "", created_at: iso(18) },
-    { id: "demo-3", token: 6, customer_name: "Rohit Kumar", phone: "", status: "queued",
-      details: { garment: "Shirt", measurements: { chest: "", waist: "", length: "" }, delivery: "" },
-      note: "Slim fit", created_at: iso(9) },
-    { id: "demo-4", token: 3, customer_name: "Meera Iyer", phone: "", status: "done",
-      details: { garment: "Lehenga", measurements: { chest: "38", waist: "32", length: "44" }, delivery: "2026-10-13" },
-      note: "", created_at: iso(180) },
-  ];
-}
+/* demo seed data lives in ./demo.js (shared with the customer page) */
 
-/* demo: a new customer walks in a few seconds after opening the preview */
+/* demo: a new customer walks in a few seconds after opening the preview.
+   Goes through the shared store so every open tab sees the arrival. */
 function simulateArrival() {
   setTimeout(() => {
     if ($("#view-dash").hidden) return;
-    const n = Math.max(...state.rows.map((r) => r.token)) + 1;
-    state.rows.push({
+    const rows = state.store.read();
+    const n = rows.reduce((m, r) => Math.max(m, r.token || 0), 0) + 1;
+    const row = {
       id: "demo-new", token: n, customer_name: "Imran Khan", phone: "",
       status: "queued",
       details: { garment: "Trousers", measurements: { chest: "", waist: "34", length: "41" }, delivery: "2026-10-19" },
       note: "", created_at: new Date().toISOString(),
-    });
+    };
+    state.store.insert(row);
+    state.rows = state.store.read();
+    state.knownIds.add(row.id);
     if (!state.muted) chime();
-    renderDash("demo-new");
+    renderDash(row.id);
     toast(`Order ${n} — Imran Khan (demo arrival)`);
   }, 6000);
 }

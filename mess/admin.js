@@ -1,8 +1,10 @@
 /* MessCount — kitchen dashboard logic. Headcount only: no tokens, no board. */
 import {
   cfg, isConfigured, isDemo, getClient, todayISO,
-  esc, timeAgo, chime, sha256hex,
+  esc, timeAgo, chime, sha256hex, demoStore,
+  getPasscodeHash, openPasscodeModal,
 } from "../shared/sq.js";
+import { demoRows } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -40,7 +42,8 @@ async function tryUnlock() {
   const v = $("#inPass").value.trim();
   if (!v) return;
   const h = await sha256hex(v);
-  if (h === (cfg().PASSCODE_HASH || "")) {
+  const want = await effectiveHash();
+  if (h === want) {
     sessionStorage.setItem(cfg().APP + "_admin", "1");
     showDash();
   } else {
@@ -48,6 +51,21 @@ async function tryUnlock() {
     $("#inPass").value = "";
     $("#inPass").focus();
   }
+}
+
+/* The passcode hash lives in the DB (changeable from the dashboard);
+   fall back to config.js when offline/demo/unconfigured. */
+async function effectiveHash() {
+  if (state.passHash) return state.passHash;
+  const fallback = cfg().PASSCODE_HASH || "";
+  if (DEMO || !isConfigured()) return fallback;
+  try {
+    const sb = await getClient();
+    state.passHash = await getPasscodeHash(sb, cfg().APP || "mess", fallback);
+  } catch (_) {
+    state.passHash = fallback;
+  }
+  return state.passHash;
 }
 
 /* ---------- dashboard ---------- */
@@ -68,30 +86,40 @@ function bindDash() {
   };
   $("#btnCopyLunch").onclick = () => copyList("lunch");
   $("#btnCopyDinner").onclick = () => copyList("dinner");
+  const btnPass = $("#btnPasscode");
+  if (btnPass) {
+    if (DEMO || !isConfigured()) {
+      btnPass.hidden = true; // nowhere to save it without the backend
+    } else {
+      btnPass.onclick = () => openPasscodeModal({
+        app: cfg().APP || "mess",
+        getSb: getClient,
+        fallbackHash: cfg().PASSCODE_HASH || "",
+        toast,
+      });
+    }
+  }
 }
 
-function demoRows() {
-  const t = Date.now();
-  const mk = (mins, name, meal, eating) => ({
-    id: "demo-" + name.replace(/\W/g, "") + meal,
-    name, meal, eating, rsvp_date: todayISO(),
-    created_at: new Date(t - mins * 60000).toISOString(),
-  });
-  return [
-    mk(6, "Aarav Mehta", "lunch", true),
-    mk(12, "Priya Nair", "lunch", true),
-    mk(18, "Rohan Iyer", "lunch", false),
-    mk(25, "Sneha Kulkarni", "lunch", true),
-    mk(33, "Kabir Singh", "lunch", true),
-    mk(41, "Aarav Mehta", "dinner", true),
-    mk(48, "Vikram Rao", "dinner", false),
-    mk(55, "Neha Gupta", "dinner", true),
-  ];
-}
+/* demo seed data lives in ./demo.js (shared with the customer page) */
 
 async function boot() {
   if (DEMO || !isConfigured()) {
-    state.rows = demoRows();
+    // Offline preview: rows live in the shared demo store so the customer
+    // page (even in another tab) and the dashboard see each other.
+    state.store = demoStore(TABLE(), demoRows);
+    state.rows = state.store.read();
+    state.knownIds = new Set(state.rows.map((r) => r.id));
+    state.store.onChange((rows) => {
+      const fresh = rows.filter((r) => !state.knownIds.has(r.id));
+      state.rows = rows;
+      fresh.forEach((r) => state.knownIds.add(r.id));
+      renderDash();
+      if (fresh.length) {
+        if (!state.muted) chime();
+        toast(`${fresh[0].name} — ${fresh[0].eating ? "eating" : "skipping"} ${MEAL_LABEL[fresh[0].meal] || ""}`);
+      }
+    });
     return;
   }
   state.sb = await getClient();
@@ -175,14 +203,18 @@ async function copyList(meal) {
   toast(`${MEAL_LABEL[meal]} list copied (${names.length} names).`);
 }
 
-/* demo: a member taps in a few seconds after opening the preview */
+/* demo: a member taps in a few seconds after opening the preview.
+   Goes through the shared store so every open tab sees the arrival. */
 function simulateArrival() {
   setTimeout(() => {
     if ($("#view-dash").hidden) return;
-    state.rows.push({
+    const row = {
       id: "demo-new", name: "Dev Patel", meal: "lunch", eating: true,
       rsvp_date: todayISO(), created_at: new Date().toISOString(),
-    });
+    };
+    state.store.insert(row);
+    state.rows = state.store.read();
+    state.knownIds.add(row.id);
     if (!state.muted) chime();
     renderDash();
     toast("Dev Patel — eating Lunch (demo arrival)");

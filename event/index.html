@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>EventQ — RSVP</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>EventQ</strong><small><span data-shop-name>EventQ</span> · RSVP &amp; gate check-in</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ RSVP FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">You're invited.</h1>
+      <p class="sub">RSVP in seconds — tell us who's coming and we'll have the
+        gate ready for you.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>RSVP</strong><span>your name + headcount</span></li>
+        <li><span class="stepn">2</span><strong>Get counted</strong><span>instant confirmation</span></li>
+        <li><span class="stepn">3</span><strong>Walk in</strong><span>show your name at the gate</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Instant confirmation</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="rsvpForm" class="card stack" novalidate>
+        <div class="field">
+          <label class="lbl" for="inEvent">Event</label>
+          <input type="text" id="inEvent" value="Sharma Wedding" />
+        </div>
+
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the host to reach you" />
+        </div>
+
+        <div class="field">
+          <span class="lbl">How many are coming?</span>
+          <div class="stepper">
+            <button type="button" id="btnMinus" aria-label="One fewer">−</button>
+            <span class="count" id="hcNum">2</span>
+            <button type="button" id="btnPlus" aria-label="One more">+</button>
+            <span class="unit">guests</span>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Confirm RSVP</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ CONFIRMATION ============ -->
+    <main id="view-done" hidden>
+      <div class="card" style="text-align:center;padding:36px 24px">
+        <div style="font-size:52px;line-height:1">🎉</div>
+        <h1 class="page" style="margin:14px 0 6px">You're on the list</h1>
+        <p class="sub" style="margin:0 auto"><strong id="dEvent"></strong><br />
+          <span id="dName"></span> · <span id="dHead"></span><br />
+          Show your name at the gate.</p>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">RSVP for someone else</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>EventQ</span>
+      <a href="admin.html">Hosting? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

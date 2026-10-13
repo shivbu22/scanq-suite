@@ -1,8 +1,10 @@
 /* KiranaQ — shop owner dashboard logic. */
 import {
   cfg, isConfigured, isDemo, getClient, todayISO,
-  esc, timeAgo, chime, sha256hex,
+  esc, timeAgo, chime, sha256hex, demoStore,
+  getPasscodeHash, openPasscodeModal,
 } from "../shared/sq.js";
+import { demoRows } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -42,14 +44,6 @@ if (BOARD) {
 
 async function boardTick() {
   renderBoard();
-  if (DEMO || !isConfigured()) return;
-  state.sb = state.sb || (await getClient());
-  state.sb
-    .channel("board")
-    .on("postgres_changes",
-      { event: "*", schema: "public", table: TABLE(),  },
-      (p) => { applyChange(p); renderBoard(); })
-    .subscribe();
 }
 
 function renderBoard() {
@@ -90,7 +84,7 @@ async function tryUnlock() {
   const v = $("#inPass").value.trim();
   if (!v) return;
   const h = await sha256hex(v);
-  const want = cfg().PASSCODE_HASH || "";
+  const want = await effectiveHash();
   if (h === want) {
     sessionStorage.setItem(cfg().APP + "_admin", "1");
     showDash();
@@ -99,6 +93,21 @@ async function tryUnlock() {
     $("#inPass").value = "";
     $("#inPass").focus();
   }
+}
+
+/* The passcode hash lives in the DB (changeable from the dashboard);
+   fall back to config.js when offline/demo/unconfigured. */
+async function effectiveHash() {
+  if (state.passHash) return state.passHash;
+  const fallback = cfg().PASSCODE_HASH || "";
+  if (DEMO || !isConfigured()) return fallback;
+  try {
+    const sb = await getClient();
+    state.passHash = await getPasscodeHash(sb, cfg().APP || "kirana", fallback);
+  } catch (_) {
+    state.passHash = fallback;
+  }
+  return state.passHash;
 }
 
 async function showDash() {
@@ -117,6 +126,19 @@ function bindDash() {
       renderDash();
     }));
   $("#btnNext").onclick = callNext;
+  const btnPass = $("#btnPasscode");
+  if (btnPass) {
+    if (DEMO || !isConfigured()) {
+      btnPass.hidden = true; // nowhere to save it without the backend
+    } else {
+      btnPass.onclick = () => openPasscodeModal({
+        app: cfg().APP || "kirana",
+        getSb: getClient,
+        fallbackHash: cfg().PASSCODE_HASH || "",
+        toast,
+      });
+    }
+  }
   $("#btnMute").onclick = () => {
     state.muted = !state.muted;
     $("#btnMute").textContent = state.muted ? "Sound off" : "Sound on";
@@ -125,25 +147,26 @@ function bindDash() {
   $("#queueList").addEventListener("click", onCardAction);
 }
 
-function demoRows() {
-  const t = Date.now();
-  const mk = (mins, token, customer_name, items, status) => ({
-    id: "demo-" + token, created_at: new Date().toISOString(), token,
-    customer_name, phone: "", details: { items }, status,
-    created_at: new Date(t - mins * 60000).toISOString(),
-  });
-  return [
-    mk(2, 24, "Arjun Nair", ["Biscuits", "Detergent 1kg"], "queued"),
-    mk(4, 21, "Meera Shah", ["Atta 5kg", "Sugar 1kg", "Tea 250g"], "queued"),
-    mk(9, 22, "Rahul Verma", ["Milk 1L", "Bread", "Eggs (12)"], "queued"),
-    mk(14, 23, "Fatima Khan", ["Rice 5kg", "Toor Dal 1kg", "Salt 1kg", "Mustard Oil 1L"], "active"),
-    mk(40, 20, "Sunita Rao", ["Atta 5kg", "Milk 1L"], "done"),
-  ];
-}
+/* demo seed data lives in ./demo.js (shared with the customer page) */
 
 async function boot(after) {
   if (DEMO || !isConfigured()) {
-    state.rows = demoRows();
+    // Offline preview: rows live in the shared demo store so the customer
+    // page (even in another tab) and the dashboard see each other.
+    state.store = demoStore(TABLE(), demoRows);
+    state.rows = state.store.read();
+    state.knownIds = new Set(state.rows.map((r) => r.id));
+    state.store.onChange((rows) => {
+      const fresh = rows.filter((r) => !state.knownIds.has(r.id));
+      state.rows = rows;
+      fresh.forEach((r) => state.knownIds.add(r.id));
+      if (BOARD) { renderBoard(); return; }
+      renderDash(fresh.length ? fresh[0].id : null);
+      if (fresh.length) {
+        if (!state.muted) chime();
+        toast(`Order ${fresh[0].token} — ${fresh[0].customer_name}`);
+      }
+    });
   } else {
     state.sb = await getClient();
     const { data, error } = await state.sb.from(TABLE())
@@ -154,7 +177,7 @@ async function boot(after) {
     state.sb
       .channel("queue")
       .on("postgres_changes",
-        { event: "*", schema: "public", table: TABLE(),  },
+        { event: "*", schema: "public", table: TABLE() },
         (p) => {
           applyChange(p);
           if (p.eventType === "INSERT" && !state.muted) chime();
@@ -264,6 +287,7 @@ async function onCardAction(e) {
   try {
     if (DEMO || !isConfigured()) {
       row.status = next;
+      state.store?.update(row.id, { status: next });
     } else {
       const { error } = await state.sb.from(TABLE()).update({ status: next }).eq("id", row.id);
       if (error) throw error;
@@ -285,8 +309,10 @@ async function callNext() {
     .sort((a, b) => a.token - b.token)[0];
   if (!next) { toast("Nobody is waiting."); return; }
   try {
-    if (DEMO || !isConfigured()) next.status = "active";
-    else {
+    if (DEMO || !isConfigured()) {
+      next.status = "active";
+      state.store?.update(next.id, { status: "active" });
+    } else {
       const { error } = await state.sb.from(TABLE()).update({ status: "active" }).eq("id", next.id);
       if (error) throw error;
       next.status = "active";
@@ -302,19 +328,25 @@ async function callNext() {
   }
 }
 
-/* demo: a new customer walks in a few seconds after opening the preview */
+/* demo: a new customer walks in a few seconds after opening the preview.
+   Goes through the shared store so every open tab sees the arrival. */
 function simulateArrival() {
   setTimeout(() => {
     if ($("#view-dash").hidden) return;
-    const n = Math.max(...state.rows.map((r) => r.token)) + 1;
-    state.rows.push({
-      id: "demo-new", created_at: new Date().toISOString(), token: n,
+    const rows = state.store.read();
+    const n = rows.reduce((m, r) => Math.max(m, r.token || 0), 0) + 1;
+    const row = {
+      id: "demo-new", token: n,
       customer_name: "Dev Patel", phone: "",
       details: { items: ["Atta 5kg", "Biscuits"] },
-      status: "queued", created_at: new Date().toISOString(),
-    });
+      status: "queued",
+      created_at: new Date().toISOString(),
+    };
+    state.store.insert(row);
+    state.rows = state.store.read();
+    state.knownIds.add(row.id);
     if (!state.muted) chime();
-    renderDash("demo-new");
+    renderDash(row.id);
     toast(`Order ${n} — Dev Patel (demo arrival)`);
   }, 6000);
 }

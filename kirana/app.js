@@ -1,8 +1,9 @@
 /* KiranaQ — customer order logic. */
 import {
   cfg, isConfigured, isDemo, getClient, todayISO,
-  esc, timeAgo,
+  esc, timeAgo, demoStore,
 } from "../shared/sq.js";
+import { demoRows } from "./demo.js";
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -88,13 +89,19 @@ $("#orderForm").addEventListener("submit", async (e) => {
     let row;
     if (isDemo() || !isConfigured()) {
       await fakeProgress(bar);
+      // Offline preview: write to the shared demo store so the dashboard
+      // (even in another tab) sees this order, like the real backend.
+      const store = demoStore(TABLE(), demoRows);
+      const rows = store.read();
+      const token = rows.reduce((m, r) => Math.max(m, r.token || 0), 0) + 1;
       row = {
-        id: "demo-me", created_at: new Date().toISOString(),
-        token: 23, customer_name: name,
-        phone: $("#inPhone").value.trim(),
+        id: "demo-" + Date.now(), token, customer_name: name,
+        phone: $("#inPhone").value.trim() || null,
         details: { items }, status: "queued",
         created_at: new Date().toISOString(),
       };
+      store.insert(row);
+      state.demoStore = store;
     } else {
       const sb = await getClient();
       const { data: token, error: tokErr } = await sb.rpc("next_queue_token", { p_app: APP() });
@@ -153,7 +160,19 @@ function showOrder(row) {
   renderStatus(row);
   window.scrollTo({ top: 0 });
 
-  if (isDemo()) { simulateDemo(); return; }
+  if (isDemo()) {
+    // Follow this order live via the shared demo store — the dashboard
+    // (even in another tab) drives status changes, like the real backend.
+    const store = state.demoStore || demoStore(TABLE(), demoRows);
+    store.onChange((rows) => {
+      const r = rows.find((x) => x.id === state.row.id);
+      if (r && r.status !== state.row.status) {
+        state.row = r;
+        renderStatus(r);
+      }
+    });
+    return;
+  }
   if (!isConfigured()) return;
   getClient().then((sb) => {
     state.channel = sb
@@ -199,17 +218,7 @@ function renderStatus(row) {
   }
 }
 
-/* demo: walk the order through the statuses so the preview feels alive */
-function simulateDemo() {
-  const seq = ["active", "done"];
-  let i = 0;
-  const h = setInterval(() => {
-    if (i >= seq.length || $("#view-token").hidden) { clearInterval(h); return; }
-    state.row.status = seq[i++];
-    renderStatus(state.row);
-    if (state.row.status === "done") clearInterval(h);
-  }, 9000);
-}
+/* status advances are driven by the dashboard via the shared demo store */
 
 $("#btnAgain").onclick = () => {
   state.channel?.unsubscribe?.();
