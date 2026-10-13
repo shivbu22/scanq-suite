@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ScanQ Suite — free counter tools for local businesses</title>
+<link rel="stylesheet" href="shared/styles.css" />
+<style>
+  .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 12px; margin-top: 22px; }
+  .appcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card);
+    padding: 20px; text-decoration: none; color: inherit; display: block;
+    transition: transform 0.12s, box-shadow 0.12s; }
+  .appcard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(20,33,26,0.10); }
+  .appcard .mark { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center;
+    color: #fff; font-family: var(--display); font-weight: 700; font-size: 20px; margin-bottom: 12px; }
+  .appcard strong { font-family: var(--display); font-size: 17px; display: block; }
+  .appcard span { font-size: 13.5px; color: var(--muted); display: block; margin-top: 4px; line-height: 1.45; }
+  .appcard .go { font-size: 13px; font-weight: 700; margin-top: 12px; display: block; }
+</style>
+</head>
+<body>
+  <div class="wrap wide">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>ScanQ Suite</strong><small>Free counter tools for local businesses</small></span>
+      </div>
+    </header>
+
+    <h1 class="page">One scan.<br />Zero waiting.</h1>
+    <p class="sub">Seven tiny tools that run a shop counter from the customer's phone —
+      queues, tokens, headcounts and feedback. No app to install, free to run.</p>
+
+    <div class="apps">
+      <a class="appcard" href="clinic/">
+        <span class="mark" style="background:#0b6bcb">C</span>
+        <strong>ClinicQ</strong>
+        <span>OPD tokens for clinics. Patients take a number and see who's ahead.</span>
+        <span class="go" style="color:#0b6bcb">Open ClinicQ →</span>
+      </a>
+      <a class="appcard" href="salon/">
+        <span class="mark" style="background:#c2436b">S</span>
+        <strong>SalonQ</strong>
+        <span>Walk-in waitlist for salons. Pick a service, get a token, watch your turn.</span>
+        <span class="go" style="color:#c2436b">Open SalonQ →</span>
+      </a>
+      <a class="appcard" href="kirana/">
+        <span class="mark" style="background:#d97a16">K</span>
+        <strong>KiranaQ</strong>
+        <span>Grocery order lists. Customers tick items, the shop gets a packing queue.</span>
+        <span class="go" style="color:#d97a16">Open KiranaQ →</span>
+      </a>
+      <a class="appcard" href="mess/">
+        <span class="mark" style="background:#2f8f3b">M</span>
+        <strong>MessCount</strong>
+        <span>Daily meal headcount for tiffin and mess owners. Know before you cook.</span>
+        <span class="go" style="color:#2f8f3b">Open MessCount →</span>
+      </a>
+      <a class="appcard" href="tailor/">
+        <span class="mark" style="background:#8a5a2b">T</span>
+        <strong>TailorTrack</strong>
+        <span>Order tracking for tailors. Customers watch cutting → stitching → ready.</span>
+        <span class="go" style="color:#8a5a2b">Open TailorTrack →</span>
+      </a>
+      <a class="appcard" href="service/">
+        <span class="mark" style="background:#4a5fc1">R</span>
+        <strong>ServiceQ</strong>
+        <span>Job cards for repair shops. Photo + issue in, live repair status out.</span>
+        <span class="go" style="color:#4a5fc1">Open ServiceQ →</span>
+      </a>
+      <a class="appcard" href="feedback/">
+        <span class="mark" style="background:#0e8a7a">F</span>
+        <strong>FeedbackQ</strong>
+        <span>QR feedback box. Ratings and comments land straight on the owner's screen.</span>
+        <span class="go" style="color:#0e8a7a">Open FeedbackQ →</span>
+      </a>
+    </div>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>ScanQ Suite</span>
+      <span>Free &amp; open · built for shop counters</span>
+    </footer>
+  </div>
+</body>
+</html>

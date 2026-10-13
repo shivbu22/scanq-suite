@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>FeedbackQ — Tell us how we did</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>FeedbackQ</strong><small><span data-shop-name>Stationery Shop</span> · <span data-shop-sub>Customer feedback box</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ FEEDBACK FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Tell us how we did.</h1>
+      <p class="sub">Your feedback goes straight to the shop — it takes less than a minute.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Scan</strong><span>the QR code at the counter</span></li>
+        <li><span class="stepn">2</span><strong>Rate &amp; write</strong><span>stars, a category, a few words</span></li>
+        <li><span class="stepn">3</span><strong>We read everything</strong><span>the shop sees it instantly</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> Anonymous option</li>
+        <li><b>✓</b> Takes 30 seconds</li>
+        <li><b>✓</b> Read by the shop</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="fbForm" class="card stack" novalidate>
+        <div class="field" data-f="rating">
+          <span class="lbl" id="starsLabel">Your rating</span>
+          <div class="stars" id="stars" role="radiogroup" aria-labelledby="starsLabel">
+            <button type="button" role="radio" aria-checked="false" aria-label="1 star" data-v="1">★</button>
+            <button type="button" role="radio" aria-checked="false" aria-label="2 stars" data-v="2">★</button>
+            <button type="button" role="radio" aria-checked="false" aria-label="3 stars" data-v="3">★</button>
+            <button type="button" role="radio" aria-checked="false" aria-label="4 stars" data-v="4">★</button>
+            <button type="button" role="radio" aria-checked="false" aria-label="5 stars" data-v="5">★</button>
+          </div>
+          <div class="err">Please pick a star rating.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inCategory">What is this about?</label>
+          <select id="inCategory"></select>
+        </div>
+
+        <div class="field" data-f="comment">
+          <label class="lbl" for="inComment">Your feedback</label>
+          <textarea id="inComment" placeholder="What went well, what could be better…"></textarea>
+          <div class="err">Please write a few words (3+ characters).</div>
+        </div>
+
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="togglerow" style="margin-top:10px">
+            <span class="t-label">Stay anonymous</span>
+            <span class="switch"><input type="checkbox" id="inAnon" /><span class="track"></span></span>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Send feedback</button>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ THANK YOU ============ -->
+    <main id="view-thanks" hidden>
+      <div class="card token-hero">
+        <div class="k">FEEDBACK RECEIVED</div>
+        <div class="stars-big" id="thStars"></div>
+        <div class="pos"><strong>Thanks for the feedback.</strong><br />The shop reads every response.</div>
+      </div>
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAnother">Send another</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>FeedbackQ</span>
+      <a href="admin.html">Shop owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

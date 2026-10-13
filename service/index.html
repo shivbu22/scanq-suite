@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ServiceQ — Report &amp; Track</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">S</span>
+        <span class="brandtext"><strong data-app-name>ServiceQ</strong><small><span data-shop-name>FixPoint Mobiles</span> · <span data-shop-sub>Repair job tracker</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ JOB FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Drop your device.<br />Track the fix.</h1>
+      <p class="sub">Describe the issue, add a photo, and get a job number.
+        Watch the repair live — no more calling to ask if it's done.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Describe issue</strong><span>what's wrong, with a photo if it helps</span></li>
+        <li><span class="stepn">2</span><strong>Get job number</strong><span>your repair gets its own number</span></li>
+        <li><span class="stepn">3</span><strong>Collect</strong><span>come over when it says Ready</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live repair status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="jobForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Priya Nair" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the shop to reach you" />
+        </div>
+
+        <div class="field" data-f="device">
+          <label class="lbl" for="inDevice">Device</label>
+          <input type="text" id="inDevice" placeholder="e.g. Redmi Note 12" />
+          <div class="err">Please tell us which device it is.</div>
+        </div>
+
+        <div class="field" data-f="issue">
+          <label class="lbl" for="inIssue">What's wrong?</label>
+          <textarea id="inIssue" placeholder="e.g. Cracked display, touch still works"></textarea>
+          <div class="err">Please describe the issue.</div>
+        </div>
+
+        <div class="field">
+          <span class="lbl">Photo <span style="color:var(--faint);font-weight:500">(optional)</span></span>
+          <div class="dropzone" id="dz" role="button" tabindex="0" aria-label="Add a photo of the issue">
+            <div class="dz-title">Tap to add a photo</div>
+            <div class="dz-sub">JPG or PNG · up to <span data-max-mb>20</span> MB</div>
+          </div>
+          <input type="file" id="inFile" accept=".png,.jpg,.jpeg,.webp" hidden />
+          <div id="fileChip" hidden></div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Get my job number</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ JOB / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR JOB</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Device</span><span class="v" id="dDevice"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">Received</div><div class="d">Your device is with us</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Repairing</div><div class="d">Our technician is on it</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Ready for pickup</div><div class="d">Show this screen at the counter</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Report another device</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">S</span><span data-app-name>ServiceQ</span></span>
+      <a href="admin.html">Shop owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

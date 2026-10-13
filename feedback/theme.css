@@ -1,0 +1,74 @@
+/* FeedbackQ theme — teal brand on the shared ScanQ design system.
+   Loaded after ../shared/styles.css. */
+
+:root {
+  --paper: #f2f8f6;
+  --ink: #12211d;
+  --muted: #57716a;
+  --faint: #87a29a;
+  --line: #d8e7e2;
+  --brand: #0e8a7a;
+  --brand-deep: #0a6b5f;
+  --brand-soft: #ddf3ef;
+  --brand-mist: #ecf9f6;
+  --board: #07322c;
+}
+
+/* re-tint shadows that the shared file hardcodes in green */
+.brandmark { box-shadow: 0 2px 8px rgba(14, 138, 122, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(14, 138, 122, 0.28); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(10, 107, 95, 0.3); }
+.dropzone { border-color: #a9cfc7; }
+
+/* Fix: in shared styles the .track span paints above the invisible checkbox,
+   so taps land on the track and never toggle. Lift the input above it. */
+.switch input { z-index: 1; }
+
+/* ---------- star rating input ---------- */
+.stars { display: flex; gap: 4px; padding: 4px 0; }
+.stars button {
+  border: 0; background: none; cursor: pointer; padding: 6px;
+  font-size: 46px; line-height: 1; color: var(--line);
+  transition: color 0.12s, transform 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.stars button.lit { color: var(--brand); }
+.stars button:hover { transform: scale(1.08); }
+.stars button:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 8px; }
+.stars .srlbl { font-size: 14px; color: var(--muted); align-self: center; margin-left: 8px; font-weight: 600; }
+
+/* ---------- star display (read-only) ---------- */
+.stars-view { font-size: 19px; letter-spacing: 3px; line-height: 1; white-space: nowrap; }
+.stars-view .on { color: var(--brand); }
+.stars-view .off { color: var(--line); }
+.stars-big { font-size: 56px; letter-spacing: 6px; line-height: 1; margin: 10px 0 4px; }
+.stars-big .on { color: var(--brand); }
+.stars-big .off { color: var(--line); }
+
+/* ---------- feedback cards ---------- */
+.fcard-top { display: flex; gap: 14px; align-items: flex-start; }
+.fmeta { flex: 1; min-width: 0; }
+.fname { font-weight: 700; font-size: 15px; font-family: var(--display); }
+.fcomment { font-size: 14.5px; margin-top: 8px; line-height: 1.55; }
+.st.new { background: var(--brand-soft); color: var(--brand-deep); }
+.st.acknowledged { background: var(--warn-soft); color: var(--warn); }
+.st.resolved { background: var(--brand-deep); color: #fff; }
+
+/* select styled like shared inputs */
+select {
+  width: 100%;
+  font: inherit; font-size: 16px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-input);
+  background: #fff; color: var(--ink);
+  outline: none; appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path d='M1 1l5 5 5-5' fill='none' stroke='%2357716a' stroke-width='2' stroke-linecap='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+
+.avg-hero { display: flex; align-items: baseline; gap: 6px; }
+.avg-hero .n { font-family: var(--display); font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.avg-hero .of { font-size: 13px; color: var(--muted); font-weight: 600; }

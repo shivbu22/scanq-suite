@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>KiranaQ — Grocery Order Queue</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">K</span>
+        <span class="brandtext"><strong>KiranaQ</strong><small><span data-shop-name>Store</span> · <span data-shop-sub>Grocery order queue</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ ORDER FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Your kirana list,<br />packed and ready.</h1>
+      <p class="sub">Tick your items, get an order number, and pick up when it's
+        ready — no waiting at the counter.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Tick items</strong><span>tap what you need from the store list</span></li>
+        <li><span class="stepn">2</span><strong>Get order no.</strong><span>your place in the packing queue</span></li>
+        <li><span class="stepn">3</span><strong>Pick up</strong><span>we call your number when it's ready</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live order status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="orderForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Meera Shah" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the shop to reach you" />
+        </div>
+
+        <div class="field" data-f="items">
+          <span class="lbl">Your list <span class="hint" id="itemCount" style="margin:0"></span></span>
+          <div class="checklist" id="itemList"></div>
+          <div class="otherrow" style="margin-top:8px">
+            <input type="text" id="inOther" placeholder="Something else? Type it here" aria-label="Other item" />
+            <button type="button" class="btn ghost small" id="btnAddOther">Add</button>
+          </div>
+          <div class="err">Please tick at least one item.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Get my order number</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ ORDER / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR ORDER NUMBER</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Items</span><span class="v" id="dItems"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">Queued</div><div class="d">Waiting for the shop to start packing</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Packing</div><div class="d">Your items are being packed now</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Ready for pickup</div><div class="d">Show this screen at the counter</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Place another order</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">K</span>KiranaQ</span>
+      <a href="admin.html">Shop owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+/* MessCount theme — fresh kitchen green. Loaded after ../shared/styles.css. */
+:root {
+  --brand: #2f8f3b;
+  --brand-deep: #1f6b28;
+  --brand-soft: #e4f4e6;
+  --brand-mist: #f0faf1;
+  --board: #0f2f14;
+}
+
+/* big eat/skip toggle */
+.seg.big button { padding: 16px 10px; font-size: 16px; }
+
+/* meal count cards */
+.mealcards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+.mealcard { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 18px; }
+.mealcard h3 { font-family: var(--display); font-size: 15px; font-weight: 700; margin: 0 0 8px; }
+.mealcard .bign { font-family: var(--display); font-variant-numeric: tabular-nums;
+  font-size: 44px; font-weight: 700; letter-spacing: -0.03em; line-height: 1; }
+.mealcard .bign small { font-size: 15px; font-weight: 600; color: var(--muted); letter-spacing: 0; }
+.mealcard .skipn { font-size: 13px; color: var(--muted); font-weight: 600; margin-top: 6px; }
+.mealcard .btn { margin-top: 12px; }
+
+/* member rows */
+.mrow { display: flex; align-items: center; gap: 10px; padding: 11px 2px;
+  border-top: 1px solid var(--line); font-size: 14.5px; }
+.mrow:first-of-type { border-top: 0; }
+.mrow .nm { font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mrow .tm { font-size: 12.5px; color: var(--muted); flex: none; }
+.pill { font-size: 12px; font-weight: 700; padding: 4px 11px; border-radius: 999px; flex: none; }
+.pill.eat { background: var(--brand-soft); color: var(--brand-deep); }
+.pill.skip { background: var(--paper); border: 1px solid var(--line); color: var(--muted); }
+
+/* confirmation card */
+.confirm { text-align: center; padding: 40px 24px 34px; }
+.confirm .tick {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 16px;
+  background: var(--brand); color: #fff;
+  display: grid; place-items: center; font-size: 30px; font-weight: 800;
+  box-shadow: 0 4px 14px rgba(47, 143, 59, 0.35);
+}
+.confirm .tick.skip { background: var(--paper); color: var(--muted); box-shadow: none; border: 1.5px solid var(--line); }
+.confirm h2 { font-family: var(--display); font-size: 24px; font-weight: 700; letter-spacing: -0.01em; }
+.confirm p { color: var(--muted); font-size: 15px; margin-top: 8px; }
+.confirm .btn { margin-top: 22px; }
+
+.explain { display: flex; gap: 10px; align-items: flex-start; font-size: 13.5px; color: var(--muted); }
+.explain b { color: var(--brand-deep); }

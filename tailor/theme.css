@@ -1,0 +1,51 @@
+/* TailorTrack theme — warm browns on cream. Loaded after ../shared/styles.css. */
+:root {
+  --paper: #faf6ef;
+  --card: #ffffff;
+  --ink: #241a10;
+  --muted: #6f5f4c;
+  --faint: #a3947c;
+  --line: #e9ddc7;
+  --brand: #8a5a2b;
+  --brand-deep: #6b4420;
+  --brand-ink: #ffffff;
+  --brand-soft: #f4e9d8;
+  --brand-mist: #faf4ea;
+  --board: #2b1c0d;
+}
+
+.brandmark { box-shadow: 0 2px 8px rgba(138, 90, 43, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(138, 90, 43, 0.28); }
+.btn.primary:disabled { background: #cdb894; }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(107, 68, 32, 0.3); }
+.dropzone { border-color: #d8c6a6; }
+
+/* form controls not covered by the shared stylesheet */
+select, input[type="date"] {
+  width: 100%;
+  font: inherit; font-size: 16px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-input);
+  background: #fff; color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+select:focus, input[type="date"]:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.field.invalid select { border-color: var(--bad); }
+
+/* measurements grid + line */
+.mgrid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+.mgrid .mlab { display: block; font-size: 12.5px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+.mdetail { font-size: 13px; color: var(--muted); margin-top: 8px; }
+
+/* counter board accents */
+.board .k { color: #e0bd85; }
+.board .who { color: #f3e4c8; }
+.board .next { color: #caa46f; }
+.board .idle { color: #caa46f; }
+.board .blogo { color: #e0bd85; border-color: #5a4126; }
+
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.active { background: var(--warn-soft); color: var(--warn); }
+.st.done { background: var(--brand-deep); color: #fff; }

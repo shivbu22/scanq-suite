@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>TailorTrack — Order &amp; Track</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">T</span>
+        <span class="brandtext"><strong data-app-name>TailorTrack</strong><small><span data-shop-name>Perfect Fit Tailors</span> · <span data-shop-sub>Stitching order tracker</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ ORDER FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Watch your outfit<br />come together.</h1>
+      <p class="sub">Give your measurements, pick your garment, and get an order
+        number. Track every stitch live — no more calling the shop to ask.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Place order</strong><span>measurements and garment, right from the counter QR</span></li>
+        <li><span class="stepn">2</span><strong>Track stitching</strong><span>watch Cutting become Stitching, live</span></li>
+        <li><span class="stepn">3</span><strong>Collect</strong><span>come over when it says Ready</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live stitching status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="orderForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the shop to reach you" />
+        </div>
+
+        <div class="field" data-f="garment">
+          <label class="lbl" for="inGarment">Garment</label>
+          <select id="inGarment">
+            <option value="">Choose a garment…</option>
+          </select>
+          <div class="err">Please choose a garment.</div>
+        </div>
+
+        <div class="field">
+          <span class="lbl">Measurements <span style="color:var(--faint);font-weight:500">(inches, optional)</span></span>
+          <div class="mgrid">
+            <div><span class="mlab">Chest</span><input type="text" id="inChest" inputmode="decimal" placeholder="e.g. 38" /></div>
+            <div><span class="mlab">Waist</span><input type="text" id="inWaist" inputmode="decimal" placeholder="e.g. 34" /></div>
+            <div><span class="mlab">Length</span><input type="text" id="inLength" inputmode="decimal" placeholder="e.g. 40" /></div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inDelivery">Delivery date <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="date" id="inDelivery" />
+          <div class="hint">When do you need it?</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inNote">Note for the tailor <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <textarea id="inNote" placeholder="e.g. Festive wear, side slits"></textarea>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Get my order number</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ ORDER / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR ORDER</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Garment</span><span class="v" id="dGarment"></span></div>
+        <div class="kv"><span class="k">Delivery</span><span class="v" id="dDelivery"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">Cutting</div><div class="d">Being cut and prepared</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Stitching</div><div class="d">Your outfit is on the machine</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Ready for pickup</div><div class="d">Show this screen at the counter</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Place another order</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">T</span><span data-app-name>TailorTrack</span></span>
+      <a href="admin.html">Shop owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

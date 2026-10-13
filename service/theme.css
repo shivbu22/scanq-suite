@@ -1,0 +1,32 @@
+/* ServiceQ theme — confident blues on cool white. Loaded after ../shared/styles.css. */
+:root {
+  --paper: #f2f4fc;
+  --card: #ffffff;
+  --ink: #161b33;
+  --muted: #5a617f;
+  --faint: #8b93b3;
+  --line: #dbe0f2;
+  --brand: #4a5fc1;
+  --brand-deep: #35448f;
+  --brand-ink: #ffffff;
+  --brand-soft: #e7ebfa;
+  --brand-mist: #f1f3fd;
+  --board: #141b3d;
+}
+
+.brandmark { box-shadow: 0 2px 8px rgba(74, 95, 193, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(74, 95, 193, 0.28); }
+.btn.primary:disabled { background: #a9b4dd; }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(53, 68, 143, 0.3); }
+.dropzone { border-color: #b9c2e8; }
+
+/* counter board accents */
+.board .k { color: #b9c4ee; }
+.board .who { color: #e2e7fb; }
+.board .next { color: #8f9cd4; }
+.board .idle { color: #8f9cd4; }
+.board .blogo { color: #b9c4ee; border-color: #2c3a72; }
+
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.active { background: var(--warn-soft); color: var(--warn); }
+.st.done { background: var(--brand-deep); color: #fff; }

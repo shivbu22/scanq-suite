@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>MessCount — Daily Meal Headcount</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">M</span>
+        <span class="brandtext"><strong>MessCount</strong><small><span data-shop-name>Mess</span> · <span data-shop-sub>Daily meal headcount</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ RSVP FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Tell the mess<br />before they cook.</h1>
+      <p class="sub">One tap tells the kitchen you're eating today — so they cook
+        just enough. No waste, no shortage.</p>
+
+      <div style="height:18px"></div>
+
+      <div class="card explain">
+        <div><b>✓</b> Lunch count closes 10:30 AM · served 1 PM<br />
+        <b>✓</b> Dinner count closes 5:30 PM · served 8 PM<br />
+        <b>✓</b> Changed your mind? Just tap again.</div>
+      </div>
+
+      <div style="height:18px"></div>
+
+      <form id="rsvpForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <span class="lbl">Meal</span>
+          <div class="seg" id="segMeal" role="group" aria-label="Meal">
+            <button type="button" data-v="lunch" aria-pressed="true">Lunch</button>
+            <button type="button" data-v="dinner" aria-pressed="false">Dinner</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <span class="lbl">Are you eating?</span>
+          <div class="seg big" id="segEat" role="group" aria-label="Eating or skipping">
+            <button type="button" data-v="yes" aria-pressed="true">I'm eating</button>
+            <button type="button" data-v="no" aria-pressed="false">Skipping</button>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Count me in</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ CONFIRMATION ============ -->
+    <main id="view-done" hidden>
+      <div class="card confirm">
+        <div class="tick" id="doneTick">✓</div>
+        <h2 id="doneTitle">Counted for Lunch</h2>
+        <p id="doneSub">See you at 1 PM.</p>
+        <button class="btn ghost" id="btnChange">Change response</button>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">M</span>MessCount</span>
+      <a href="admin.html">Mess owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>
