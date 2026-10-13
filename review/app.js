@@ -58,8 +58,9 @@ $("#btnGoogle").addEventListener("click", async () => {
   if (!stars) return;
 
   const url = (localStorage.getItem(GOOGLE_URL_KEY) || "").trim();
-  if (url) {
+  if (url && /^https:\/\//i.test(url)) {
     // Open synchronously in the click handler so popup blockers allow it.
+    // https-only: kills any residual self-XSS via a crafted URL.
     window.open(url, "_blank", "noopener");
   }
 
