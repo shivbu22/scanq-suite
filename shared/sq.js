@@ -20,7 +20,7 @@ let _client = null;
 export async function getClient() {
   if (_client) return _client;
   const { createClient } = await import(
-    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm"
+    "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.44.4/+esm"
   );
   const c = cfg();
   _client = createClient(c.SUPABASE_URL, c.SUPABASE_ANON_KEY);
