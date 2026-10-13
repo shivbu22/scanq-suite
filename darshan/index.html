@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>DarshanQ — Temple Token Queue</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>DarshanQ</strong><small><span data-shop-name>Shri Mandir</span> · Darshan token queue</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ TOKEN FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Darshan,<br />without the crowd.</h1>
+      <p class="sub">Take a token for your family, pick your aarti, and wait in peace.
+        We will call your token when it is time.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Take token</strong><span>scan the QR at the temple gate</span></li>
+        <li><span class="stepn">2</span><strong>Wait in peace</strong><span>sit, rest, no standing in line</span></li>
+        <li><span class="stepn">3</span><strong>Walk in</strong><span>when your token is called</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live token status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="tokenForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Ramesh Tiwari" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the temple to reach you" />
+        </div>
+
+        <div class="field" data-f="devotees">
+          <label class="lbl">Devotees</label>
+          <div class="stepper">
+            <button type="button" data-dec aria-label="Fewer devotees">−</button>
+            <span class="qty" data-qty id="devQty">1</span>
+            <button type="button" data-inc aria-label="More devotees">+</button>
+          </div>
+          <div class="err">Add at least one devotee.</div>
+        </div>
+
+        <div class="field" data-f="slot">
+          <label class="lbl" for="inSlot">Darshan slot</label>
+          <select id="inSlot"></select>
+          <div class="err">Please choose a slot.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Get my token</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ TOKEN / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR TOKEN</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Devotees</span><span class="v" id="dDevotees"></span></div>
+        <div class="kv"><span class="k">Slot</span><span class="v" id="dSlot"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">Waiting</div><div class="d">We will call your token soon</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Inside</div><div class="d">Please proceed for darshan</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Done</div><div class="d">Blessings. See you next time.</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Take another token</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>DarshanQ</span>
+      <a href="admin.html">Temple staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

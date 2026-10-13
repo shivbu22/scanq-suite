@@ -1,0 +1,27 @@
+/* LibraryQ theme — warm brown & white over the shared ScanQ design system. */
+:root {
+  --brand: #92400e;
+  --brand-deep: #78350f;
+  --brand-soft: #fdf1e3;
+  --brand-mist: #fffaf3;
+  --board: #2e1c08;
+  --board-ink: #f5dfbc;
+  --board-dim: #d9a85e;
+  --board-line: #6b4a1e;
+}
+
+/* overdue loan highlight */
+.lcard.overdue { border-color: #e8a0a0; background: #fff7f7; }
+.st.overdue { background: #fdecec; color: #b3261e; }
+.st.onloan { background: var(--brand-soft); color: var(--brand-deep); }
+.st.returned { background: var(--brand-deep); color: #fff; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(146, 64, 14, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(146, 64, 14, 0.28); }
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

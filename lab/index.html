@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>LabQ — Test Report Tracker</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>LabQ</strong><small><span data-shop-name>CityCare Labs</span> · <span data-shop-sub>Test report tracker</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ TOKEN FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Give sample,<br />track report.</h1>
+      <p class="sub">Register your tests from your phone after giving your sample.
+        We will ping your report the moment it is ready.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Give sample</strong><span>at the lab counter</span></li>
+        <li><span class="stepn">2</span><strong>Register</strong><span>tick your tests below</span></li>
+        <li><span class="stepn">3</span><strong>Get report</strong><span>when the status turns ready</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live report status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="tokenForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For report alerts" />
+        </div>
+
+        <div class="field" data-f="tests">
+          <span class="lbl">Tests</span>
+          <div class="testchips" id="testChips" role="group" aria-label="Choose tests"></div>
+          <div class="err">Please tick at least one test.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inNote">Doctor note <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="text" id="inNote" placeholder="e.g. Dr. Sharma's prescription" />
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Get my token</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ TOKEN / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR TOKEN</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Tests</span><span class="v" id="dTests"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">Sample received</div><div class="d">Your sample is with the lab</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Testing</div><div class="d">Your tests are being processed</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Report ready</div><div class="d">Collect your report at the counter</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Register another sample</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>LabQ</span>
+      <a href="admin.html">Lab staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

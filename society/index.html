@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>SocietyQ — Society Portal</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>SocietyQ</strong><small><span data-shop-name>Greenview Society</span> · Society portal</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <main>
+      <h1 class="page">Your society,<br />in your pocket.</h1>
+      <p class="sub">Check maintenance dues, raise complaints, and register gate entries —
+        no app needed, no office visits.</p>
+
+      <div class="tabs" role="tablist" id="custTabs" style="margin-top:18px">
+        <button role="tab" data-ctab="dues" aria-selected="true">My Dues</button>
+        <button role="tab" data-ctab="complaint" aria-selected="false">Complaint</button>
+        <button role="tab" data-ctab="gate" aria-selected="false">Gate Entry</button>
+      </div>
+
+      <!-- ============ DUES ============ -->
+      <section id="sec-dues">
+        <form id="duesForm" class="card stack" novalidate style="margin-top:14px">
+          <div class="field" data-f="flat">
+            <label class="lbl" for="inFlat">Flat number</label>
+            <input type="text" id="inFlat" autocomplete="off" placeholder="e.g. A-101" />
+            <div class="err">Please enter your flat number.</div>
+          </div>
+          <div>
+            <button type="submit" class="btn primary" id="btnDues">Check my dues</button>
+            <div class="progress" id="progDues"><i></i></div>
+          </div>
+        </form>
+        <div id="duesList" style="margin-top:14px"></div>
+      </section>
+
+      <!-- ============ COMPLAINT ============ -->
+      <section id="sec-complaint" hidden>
+        <div id="complaintWrap">
+          <form id="complaintForm" class="card stack" novalidate style="margin-top:14px">
+            <div class="field" data-f="cflat">
+              <label class="lbl" for="inCFlat">Flat number</label>
+              <input type="text" id="inCFlat" autocomplete="off" placeholder="e.g. A-101" />
+              <div class="err">Please enter your flat number.</div>
+            </div>
+            <div class="field" data-f="cname">
+              <label class="lbl" for="inCName">Your name</label>
+              <input type="text" id="inCName" autocomplete="name" placeholder="e.g. Ramesh Gupta" />
+              <div class="err">Please enter your name.</div>
+            </div>
+            <div class="field" data-f="ccat">
+              <label class="lbl" for="inCCat">Category</label>
+              <select id="inCCat"></select>
+              <div class="err">Please choose a category.</div>
+            </div>
+            <div class="field" data-f="cdesc">
+              <label class="lbl" for="inCDesc">Describe the issue</label>
+              <input type="text" id="inCDesc" placeholder="What needs fixing?" />
+              <div class="err">Please describe the issue.</div>
+            </div>
+            <div>
+              <button type="submit" class="btn primary" id="btnComplaint">Raise complaint</button>
+              <div class="progress" id="progComplaint"><i></i></div>
+            </div>
+          </form>
+        </div>
+        <div id="complaintDone" hidden>
+          <div class="card token-hero" style="margin-top:14px">
+            <div class="k">COMPLAINT RAISED</div>
+            <div class="n" style="font-size:44px" id="compTicket">–</div>
+            <div class="pos" id="compLine"></div>
+          </div>
+          <div style="height:14px"></div>
+          <button class="btn ghost block" id="btnCompAgain">Raise another</button>
+        </div>
+      </section>
+
+      <!-- ============ GATE ENTRY ============ -->
+      <section id="sec-gate" hidden>
+        <div id="gateWrap">
+          <form id="gateForm" class="card stack" novalidate style="margin-top:14px">
+            <div class="field" data-f="gname">
+              <label class="lbl" for="inGName">Visitor name</label>
+              <input type="text" id="inGName" autocomplete="off" placeholder="e.g. Amit Verma" />
+              <div class="err">Please enter the visitor's name.</div>
+            </div>
+            <div class="field" data-f="gflat">
+              <label class="lbl" for="inGFlat">Visiting flat</label>
+              <input type="text" id="inGFlat" autocomplete="off" placeholder="e.g. A-101" />
+              <div class="err">Please enter the flat number.</div>
+            </div>
+            <div class="field">
+              <label class="lbl" for="inGPurpose">Purpose <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+              <input type="text" id="inGPurpose" placeholder="Delivery, guest, maid…" />
+            </div>
+            <div>
+              <button type="submit" class="btn primary" id="btnGate">Get entry pass</button>
+              <div class="progress" id="progGate"><i></i></div>
+            </div>
+          </form>
+        </div>
+        <div id="gateDone" hidden>
+          <div class="card token-hero" style="margin-top:14px">
+            <div class="k">ENTRY PASS</div>
+            <div class="n" style="font-size:34px" id="gateName">–</div>
+            <div class="pos" id="gateLine"></div>
+            <div class="pos" id="gateStatus" style="margin-top:8px"></div>
+          </div>
+          <div style="height:14px"></div>
+          <button class="btn ghost block" id="btnGateAgain">Register another visitor</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>SocietyQ</span>
+      <a href="admin.html">Society staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

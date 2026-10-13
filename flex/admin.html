@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>FlexQ — Staff Dashboard</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+
+  <!-- ============ PASSCODE LOCK ============ -->
+  <div class="wrap" id="view-lock" hidden>
+    <div class="lockwrap">
+      <div class="lock">
+        <span class="brandmark">Q</span>
+        <div class="n">FLEXQ · STAFF DASHBOARD</div>
+        <h1 class="page" style="margin-bottom:8px">Welcome back</h1>
+        <p class="sub" style="margin-bottom:22px">Enter your staff passcode to continue.</p>
+        <input type="password" id="inPass" inputmode="numeric" autocomplete="off"
+               placeholder="••••" aria-label="FlexQ passcode" />
+        <div class="err" id="passErr" style="text-align:center;margin:10px 0 0">Wrong passcode. Try again.</div>
+        <div style="height:16px"></div>
+        <button class="btn primary" id="btnUnlock">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="wrap wide" id="view-dash" hidden>
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>FlexQ</strong><small>Staff dashboard · <span id="todayLine">Today</span></small></span>
+      </div>
+      <div class="topactions">
+        <button class="btn ghost small" id="btnMute" aria-pressed="true">Sound on</button>
+        <a class="btn ghost small" href="admin.html?display=1" target="_blank" rel="noopener">Counter display</a>
+        <button class="btn ghost small" id="btnPasscode">Passcode</button>
+        <span class="live"><i></i>Live</span>
+      </div>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n" id="stQueued">0</div><div class="l">Received</div></div>
+      <div class="stat"><div class="n" id="stActive">0</div><div class="l">Printing</div></div>
+      <div class="stat"><div class="n" id="stDone">0</div><div class="l">Ready today</div></div>
+    </div>
+
+    <button class="btn primary" id="btnNext" style="max-width:340px">Print next order</button>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="queued" aria-selected="true">Received<span class="c" id="cQueued"></span></button>
+      <button role="tab" data-tab="active" aria-selected="false">Printing<span class="c" id="cActive"></span></button>
+      <button role="tab" data-tab="done" aria-selected="false">Ready<span class="c" id="cDone"></span></button>
+    </div>
+
+    <div id="queueList"></div>
+  </div>
+
+  <!-- ============ COUNTER DISPLAY BOARD ============ -->
+  <div id="view-board" hidden>
+    <div class="board">
+      <div class="blogo">FLEXQ</div>
+      <div id="boardMain"></div>
+      <div class="next" id="boardNext"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="admin.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>
