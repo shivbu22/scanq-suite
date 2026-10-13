@@ -1,0 +1,44 @@
+/* TattooQ theme — ink black & white over the shared ScanQ design system. */
+:root {
+  --brand: #111827;
+  --brand-deep: #030712;
+  --brand-soft: #e5e7eb;
+  --brand-mist: #f9fafb;
+}
+
+/* status chips for this app's statuses */
+.st.booked { background: var(--brand-soft); color: var(--brand-deep); }
+.st.done { background: var(--brand-deep); color: #fff; }
+.st.cancelled { background: #fee2e2; color: #b91c1c; }
+.st.no_show { background: #fef3c7; color: #b45309; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(17, 24, 39, 0.3); }
+.btn.primary { box-shadow: 0 4px 14px rgba(17, 24, 39, 0.3); }
+
+/* dropzone for the reference image */
+.dropzone {
+  border: 1.5px dashed var(--line);
+  border-radius: var(--r-input);
+  padding: 22px 16px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--brand-mist);
+  transition: border-color 0.15s, background 0.15s;
+}
+.dropzone.over { border-color: var(--brand); background: var(--brand-soft); }
+.dropzone .dz-title { font-weight: 700; }
+.dropzone .dz-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+.filechip {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; border: 1.5px solid var(--line); border-radius: var(--r-input);
+  padding: 10px 12px; background: #fff;
+}
+.filechip .fn { font-weight: 600; font-size: 14px; }
+.filechip .fs { font-size: 12.5px; color: var(--muted); }
+.filechip .rm {
+  border: none; background: none; font-size: 16px; cursor: pointer;
+  color: var(--muted); padding: 6px;
+}
+
+/* day chips + booking hero reuse shared slotchip/token-hero styles */

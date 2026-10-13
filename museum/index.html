@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>MuseumQ — E-tickets</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>MuseumQ</strong><small><span data-shop-name>City Museum</span> · E-tickets</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ BOOKING FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Skip the line,<br />see everything.</h1>
+      <p class="sub">Book your museum e-ticket from your phone. Show it at the gate —
+        no queues at the counter.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Pick a day</strong><span>choose your visit date</span></li>
+        <li><span class="stepn">2</span><strong>Get e-ticket</strong><span>tell us how many are coming</span></li>
+        <li><span class="stepn">3</span><strong>Walk in</strong><span>show it at the entry gate</span></li>
+      </ol>
+
+      <div style="height:22px"></div>
+
+      <form id="bookForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the museum to reach you" />
+        </div>
+
+        <div class="field" data-f="date">
+          <span class="lbl">Visit date</span>
+          <div class="slotchips" id="dayChips" role="group" aria-label="Choose a visit date"></div>
+          <div class="err">Please pick a visit date.</div>
+        </div>
+
+        <div class="field" data-f="tickets">
+          <span class="lbl">Tickets</span>
+          <div class="stepper">
+            <button type="button" id="tMinus" aria-label="One fewer ticket">−</button>
+            <span class="val"><strong id="tCount">2</strong> <span style="font-size:13px;color:var(--muted)">ticket(s)</span></span>
+            <button type="button" id="tPlus" aria-label="One more ticket">+</button>
+          </div>
+          <div class="err">Please choose at least one ticket.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Get my e-ticket</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ E-TICKET / STATUS ============ -->
+    <main id="view-booked" hidden>
+      <div class="card ticket-hero">
+        <div class="k">YOUR E-TICKET</div>
+        <div class="n"><span id="tickNum">–</span></div>
+        <div class="pos" id="tickDateLine"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Visit date</span><span class="v" id="dDate"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <div id="dStatus"></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Book another visit</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>MuseumQ</span>
+      <a href="admin.html">Museum staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

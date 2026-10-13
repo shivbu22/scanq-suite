@@ -1,0 +1,44 @@
+/* CourierQ theme — royal blue & white over the shared ScanQ design system. */
+:root {
+  --brand: #1d4ed8;
+  --brand-deep: #1e3a8a;
+  --brand-soft: #dbeafe;
+  --brand-mist: #eff6ff;
+  --board: #172554;
+  --board-ink: #bfdbfe;
+  --board-dim: #93c5fd;
+  --board-line: #1e40af;
+}
+
+/* form select (shared CSS styles text inputs only) */
+select {
+  width: 100%;
+  font: inherit; font-size: 16px;
+  padding: 12px 38px 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-input);
+  background-color: #fff; color: var(--ink);
+  outline: none; appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%231e3a8a' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.field.invalid select { border-color: var(--bad); }
+
+/* status chips for this app's statuses */
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.active { background: var(--warn-soft); color: var(--warn); }
+.st.done { background: var(--brand-deep); color: #fff; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(29, 78, 216, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(29, 78, 216, 0.28); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(30, 58, 138, 0.3); }
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

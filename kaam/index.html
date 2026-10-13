@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>KaamQ — Book a Technician</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>KaamQ</strong><small><span data-shop-name>KaamQ Home Services</span> · Book a trusted technician</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ BOOKING FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">A technician<br />at your door.</h1>
+      <p class="sub">Book a plumber, electrician or handyman in under a minute.
+        No commission, no middlemen — your local technician comes straight to you.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Book visit</strong><span>pick a service &amp; time</span></li>
+        <li><span class="stepn">2</span><strong>Get assigned</strong><span>we send your technician</span></li>
+        <li><span class="stepn">3</span><strong>Pay after work</strong><span>only when the job is done</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live booking status</li>
+        <li><b>✓</b> Zero commission</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="bookForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field" data-f="phone">
+          <label class="lbl" for="inPhone">Phone</label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" maxlength="13" placeholder="10-digit mobile number" />
+          <div class="err">Please enter a valid 10-digit mobile number.</div>
+        </div>
+
+        <div class="field" data-f="service">
+          <label class="lbl" for="inService">Service needed</label>
+          <select id="inService"></select>
+          <div class="err">Please choose a service.</div>
+        </div>
+
+        <div class="field" data-f="address">
+          <label class="lbl" for="inAddress">Address</label>
+          <textarea id="inAddress" autocomplete="street-address" placeholder="House / flat, street, area, city"></textarea>
+          <div class="err">Please enter your address.</div>
+        </div>
+
+        <div class="field" data-f="slot">
+          <label class="lbl" for="inSlot">Preferred time</label>
+          <select id="inSlot"></select>
+          <div class="err">Please choose a time slot.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Book my visit</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnTrack">Track an existing booking</button>
+    </main>
+
+    <!-- ============ CONFIRMATION ============ -->
+    <main id="view-confirm" hidden>
+      <div class="card token-hero">
+        <div class="k">BOOKING REFERENCE</div>
+        <div class="refcode" id="refCode">–</div>
+        <div class="pos" id="confLine"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Service</span><span class="v" id="dService"></span></div>
+        <div class="kv"><span class="k">When</span><span class="v" id="dSlot"></span></div>
+        <div class="kv"><span class="k">Technician</span><span class="v" id="dTech"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">Booking received</div><div class="d">We are finding your technician</div></div></li>
+          <li data-s="assigned"><span class="dot"></span><div><div class="t">Technician assigned</div><div class="d">They will call before leaving</div></div></li>
+          <li data-s="arrived"><span class="dot"></span><div><div class="t">Technician arrived</div><div class="d">Work is in progress</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Done</div><div class="d">Job completed. Pay after the work.</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Book another visit</button>
+    </main>
+
+    <!-- ============ TRACK BY PHONE ============ -->
+    <main id="view-track" hidden>
+      <h1 class="page">Track<br />your booking.</h1>
+      <p class="sub">Enter the phone number you booked with to see your visits.</p>
+
+      <form id="trackForm" class="card stack" novalidate>
+        <div class="field" data-f="tphone">
+          <label class="lbl" for="inTrackPhone">Phone</label>
+          <input type="tel" id="inTrackPhone" inputmode="tel" maxlength="13" placeholder="10-digit mobile number" />
+          <div class="err">Please enter a valid 10-digit mobile number.</div>
+        </div>
+        <div>
+          <button type="submit" class="btn primary" id="btnTrackGo">Find my bookings</button>
+        </div>
+      </form>
+
+      <div style="height:14px"></div>
+      <div id="trackResults"></div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnBack">Back to booking</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>KaamQ</span>
+      <a href="admin.html">Owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

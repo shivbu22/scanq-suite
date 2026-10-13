@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BloodQ — Donor Registration</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>BloodQ</strong><small><span data-shop-name>RedCross Camp</span> · Donor registration</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ REGISTRATION FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Donate blood,<br />save lives.</h1>
+      <p class="sub">Register as a donor at the camp. Your details go straight
+        to the organizer's screen.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Register</strong><span>scan the QR at the camp</span></li>
+        <li><span class="stepn">2</span><strong>Verify</strong><span>quick health check at the desk</span></li>
+        <li><span class="stepn">3</span><strong>Donate</strong><span>you are a hero</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Instant registration</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="donorForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the camp to reach you" />
+        </div>
+
+        <div class="field" data-f="group">
+          <label class="lbl" for="inGroup">Blood group</label>
+          <select id="inGroup"></select>
+          <div class="err">Please choose your blood group.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inLastDonation">Last donation <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="date" id="inLastDonation" />
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Register as donor</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ DONOR CARD ============ -->
+    <main id="view-card" hidden>
+      <div class="card token-hero">
+        <div class="k">DONOR CARD</div>
+        <div class="n" id="donorGroup" style="font-size:64px">–</div>
+        <div class="pos" id="donorIdLine"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Blood group</span><span class="v" id="dGroup"></span></div>
+        <div class="kv"><span class="k">Last donation</span><span class="v" id="dLast"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <p class="sub" style="text-align:center">Thank you for registering. Please show this at the camp desk.</p>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Register another donor</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>BloodQ</span>
+      <a href="admin.html">Camp staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

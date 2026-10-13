@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HajiriQ — Staff Check-in</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>HajiriQ</strong><small><span data-shop-name>My Shop</span> · Staff check-in</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ PHONE LOOKUP ============ -->
+    <main id="view-lookup">
+      <h1 class="page">Mark your<br />attendance.</h1>
+      <p class="sub">Enter the phone number you gave your shop to check in or out for today.</p>
+
+      <div style="height:18px"></div>
+
+      <form id="phoneForm" class="card stack" novalidate>
+        <div class="field" data-f="phone">
+          <label class="lbl" for="inPhone">Your phone number</label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="e.g. 98110 22334" />
+          <div class="err">Please enter your phone number.</div>
+        </div>
+        <button type="submit" class="btn primary" id="btnFind">Find me</button>
+      </form>
+    </main>
+
+    <!-- ============ CHECK IN / OUT ============ -->
+    <main id="view-check" hidden>
+      <div class="card">
+        <div class="k" style="font-size:12px;color:var(--faint);letter-spacing:.06em">CHECKING IN AS</div>
+        <div style="font-size:22px;font-weight:750;margin-top:4px" id="staffName">–</div>
+        <div style="color:var(--faint);font-size:14px" id="todayLine"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card" id="todayCard">
+        <div class="kv"><span class="k">Check-in</span><span class="v" id="dIn">—</span></div>
+        <div class="kv"><span class="k">Check-out</span><span class="v" id="dOut">—</span></div>
+        <div class="kv"><span class="k">Status</span><span class="v" id="dStatus">—</span></div>
+      </div>
+
+      <button class="checkbtn" id="btnIn">✓&nbsp; Check in</button>
+      <button class="checkbtn out" id="btnOut">Check out</button>
+
+      <div style="height:16px"></div>
+      <button class="btn ghost block" id="btnSwitch">Not you? Use a different number</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>HajiriQ</span>
+      <a href="admin.html">Owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

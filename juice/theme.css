@@ -1,0 +1,46 @@
+/* JuiceQ theme — vivid orange & white over the shared ScanQ design system. */
+:root {
+  --brand: #f97316;
+  --brand-deep: #c2410c;
+  --brand-soft: #ffedd5;
+  --brand-mist: #fff7ed;
+  --board: #431407;
+  --board-ink: #fed7aa;
+  --board-dim: #fb923c;
+  --board-line: #9a3412;
+}
+
+/* juice checklist with qty steppers */
+.item-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 2px; border-bottom: 1px solid var(--line);
+}
+.item-row:last-child { border-bottom: none; }
+.item-row .iname { font-size: 15px; font-weight: 600; }
+.stepper { display: flex; align-items: center; gap: 10px; }
+.stepper button {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--line); background: #fff;
+  font-size: 18px; font-weight: 700; line-height: 1;
+  color: var(--brand-deep); cursor: pointer;
+  display: grid; place-items: center;
+}
+.stepper button:active { background: var(--brand-soft); }
+.stepper .qty { min-width: 22px; text-align: center; font-weight: 700; font-size: 16px; }
+.stepper .unit { font-size: 12px; color: var(--muted); margin-left: -6px; }
+
+/* status chips for this app's statuses */
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.active { background: var(--warn-soft); color: var(--warn); }
+.st.done { background: var(--brand-deep); color: #fff; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(249, 115, 22, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(249, 115, 22, 0.28); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(194, 65, 12, 0.3); }
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

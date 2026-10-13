@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>BakeryQ — Cake Pre-orders</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>BakeryQ</strong><small><span data-shop-name>Crumb &amp; Craft</span> · Cake pre-orders</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ ORDER FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Fresh cakes,<br />booked ahead.</h1>
+      <p class="sub">Order your cake from your phone, pick a pickup day, and we will
+        bake it fresh for you. No waiting at the counter.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Order</strong><span>scan the QR at the bakery</span></li>
+        <li><span class="stepn">2</span><strong>We bake</strong><span>fresh on your pickup day</span></li>
+        <li><span class="stepn">3</span><strong>Collect</strong><span>walk in when it is ready</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live order status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="tokenForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Ritu Sharma" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the bakery to reach you" />
+        </div>
+
+        <div class="field" data-f="cake">
+          <label class="lbl" for="inCake">Cake</label>
+          <select id="inCake"></select>
+          <div class="err">Please choose a cake.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Size</label>
+          <div class="stepper">
+            <button type="button" data-dec aria-label="Less cake">−</button>
+            <span class="qty" data-qty>1</span><span class="unit">kg</span>
+            <button type="button" data-inc aria-label="More cake">+</button>
+          </div>
+        </div>
+
+        <div class="field" data-f="pickup">
+          <label class="lbl">Pickup day</label>
+          <div class="slotchips" id="dayChips"></div>
+          <div class="err">Please pick a pickup day.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Place my order</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ ORDER NUMBER / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR ORDER NUMBER</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Cake</span><span class="v" id="dCake"></span></div>
+        <div class="kv"><span class="k">Pickup</span><span class="v" id="dPickup"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">New order</div><div class="d">We have your order on the list</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Baking</div><div class="d">Your cake is in the oven now</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Ready</div><div class="d">Come collect your cake</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Order another cake</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>BakeryQ</span>
+      <a href="admin.html">Bakery staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

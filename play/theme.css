@@ -1,0 +1,15 @@
+/* PlayQ theme — bright sky & white over the shared ScanQ design system. */
+:root {
+  --brand: #38bdf6;
+  --brand-deep: #0284c7;
+  --brand-soft: #e0f2fe;
+  --brand-mist: #f0f9ff;
+}
+
+/* status chips for this app's statuses */
+.st.inside { background: var(--brand-soft); color: var(--brand-deep); }
+.st.checked_out { background: var(--line); color: var(--muted); }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(56, 189, 246, 0.35); }
+.btn.primary { box-shadow: 0 4px 14px rgba(56, 189, 246, 0.35); }

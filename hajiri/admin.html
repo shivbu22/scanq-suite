@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HajiriQ — Owner Dashboard</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+
+  <!-- ============ PASSCODE LOCK ============ -->
+  <div class="wrap" id="view-lock" hidden>
+    <div class="lockwrap">
+      <div class="lock">
+        <span class="brandmark">Q</span>
+        <div class="n">HAJIRIQ · OWNER DASHBOARD</div>
+        <h1 class="page" style="margin-bottom:8px">Welcome back</h1>
+        <p class="sub" style="margin-bottom:22px">Enter your shop passcode to continue.</p>
+        <input type="password" id="inPass" inputmode="numeric" autocomplete="off"
+               placeholder="••••" aria-label="Shop passcode" />
+        <div class="err" id="passErr" style="text-align:center;margin:10px 0 0">Wrong passcode. Try again.</div>
+        <div style="height:16px"></div>
+        <button class="btn primary" id="btnUnlock">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="wrap wide" id="view-dash" hidden>
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>HajiriQ</strong><small><span data-shop-name>My Shop</span> · <span id="todayLine">Today</span></small></span>
+      </div>
+      <div class="topactions">
+        <button class="btn ghost small" id="btnPasscode">Passcode</button>
+        <span class="live"><i></i>Live</span>
+      </div>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n" id="stPresent">0</div><div class="l">Present today</div></div>
+      <div class="stat"><div class="n" id="stAbsent">0</div><div class="l">Absent / leave</div></div>
+      <div class="stat"><div class="n" id="stUnmarked">0</div><div class="l">Not marked</div></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="today" aria-selected="true">Today<span class="c" id="cToday"></span></button>
+      <button role="tab" data-tab="staff" aria-selected="false">Staff<span class="c" id="cStaff"></span></button>
+      <button role="tab" data-tab="salary" aria-selected="false">Salary</button>
+    </div>
+
+    <!-- ============ TODAY ============ -->
+    <div id="tab-today">
+      <div id="todayList"></div>
+    </div>
+
+    <!-- ============ STAFF ============ -->
+    <div id="tab-staff" hidden>
+      <form id="staffForm" class="card stack" novalidate>
+        <h2 class="sec" style="margin-top:0">Add staff member</h2>
+        <div class="field" data-f="sname">
+          <label class="lbl" for="inSName">Name</label>
+          <input type="text" id="inSName" autocomplete="off" placeholder="e.g. Ramesh Kumar" />
+          <div class="err">Please enter a name.</div>
+        </div>
+        <div class="field">
+          <label class="lbl" for="inSPhone">Phone</label>
+          <input type="tel" id="inSPhone" autocomplete="off" inputmode="tel" placeholder="Staff check-in number" />
+        </div>
+        <div class="field" data-f="swage">
+          <label class="lbl" for="inSWage">Daily wage (₹)</label>
+          <input type="number" id="inSWage" inputmode="decimal" min="0" step="1" placeholder="e.g. 500" />
+          <div class="err">Please enter the daily wage.</div>
+        </div>
+        <button type="submit" class="btn primary" id="btnAddStaff">Add staff</button>
+      </form>
+      <div style="height:14px"></div>
+      <div id="staffList"></div>
+    </div>
+
+    <!-- ============ SALARY ============ -->
+    <div id="tab-salary" hidden>
+      <div class="card stack">
+        <div class="field">
+          <label class="lbl" for="inMonth">Month</label>
+          <input type="month" id="inMonth" />
+        </div>
+      </div>
+      <div style="height:14px"></div>
+      <div class="card" id="salaryCard">
+        <h2 class="sec" style="margin-top:0">Salary sheet <span id="salaryMonthLbl" style="color:var(--faint);font-weight:500"></span></h2>
+        <div style="overflow-x:auto">
+          <table class="sheet" id="salaryTable"></table>
+        </div>
+        <p class="sub" style="margin-bottom:0">Payable = (present days + half days × 0.5) × daily wage.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="admin.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

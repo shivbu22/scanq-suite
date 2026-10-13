@@ -1,0 +1,73 @@
+/* BoutiqueQ theme — purple & white over the shared ScanQ design system. */
+:root {
+  --brand: #9333EA;
+  --brand-deep: #6B21A8;
+  --brand-soft: #F3E8FF;
+  --brand-mist: #FAF5FF;
+  --board: #2E1065;
+  --board-ink: #EDE9FE;
+  --board-dim: #C4B5FD;
+  --board-line: #5B21B6;
+}
+
+/* form select + textarea (shared CSS styles text inputs only) */
+select {
+  width: 100%;
+  font: inherit; font-size: 16px;
+  padding: 12px 38px 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-input);
+  background-color: #fff; color: var(--ink);
+  outline: none; appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236B21A8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.field.invalid select { border-color: var(--bad); }
+
+textarea {
+  width: 100%; min-height: 84px; resize: vertical;
+  font: inherit; font-size: 16px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-input);
+  background: #fff; color: var(--ink);
+  outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+}
+textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+
+/* delivery date chips (day chips pattern) */
+.daychips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.daychips::-webkit-scrollbar { display: none; }
+.daychip {
+  flex: none; border: 1.5px solid var(--line); background: #fff;
+  border-radius: 14px; padding: 10px 14px; cursor: pointer;
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.daychip small { font-size: 11.5px; font-weight: 500; color: var(--muted); }
+.daychip[aria-pressed="true"] { border-color: var(--brand-deep); background: var(--brand-soft); color: var(--brand-deep); }
+.daychip[aria-pressed="true"] small { color: var(--brand-deep); }
+.field.invalid .daychip:first-child { border-color: var(--bad); }
+
+/* status chips for this app's statuses */
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.active { background: var(--warn-soft); color: var(--warn); }
+.st.done { background: var(--brand-deep); color: #fff; }
+
+/* overdue delivery chip */
+.chip.overdue { background: #fee2e2; color: #b91c1c; border-color: #fecaca; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(147, 51, 234, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(147, 51, 234, 0.28); }
+.daychip[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(107, 33, 168, 0.25); }
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

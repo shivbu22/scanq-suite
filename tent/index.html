@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>TentQ — Event Bookings</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>TentQ</strong><small><span data-shop-name>Sharma Tent House</span> · Event bookings</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ BOOKING FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Book your<br />event setup.</h1>
+      <p class="sub">Pick your event date, tick what you need — tent, chairs, lights —
+        and we will have it ready at your venue.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Book</strong><span>scan the QR, pick a date</span></li>
+        <li><span class="stepn">2</span><strong>Tick items</strong><span>tent, chairs, lights…</span></li>
+        <li><span class="stepn">3</span><strong>Relax</strong><span>we set up on the day</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live booking status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="bookForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Ramesh Gupta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For us to confirm details" />
+        </div>
+
+        <div class="field" data-f="date">
+          <label class="lbl">Event date</label>
+          <div class="daychips" id="dayChips" role="group" aria-label="Event date"></div>
+          <div class="err">Please pick your event date.</div>
+        </div>
+
+        <div class="field" data-f="items">
+          <label class="lbl">What do you need?</label>
+          <div class="itempills" id="itemPills"></div>
+          <div class="err">Please tick at least one item.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Book now</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ BOOKING / STATUS ============ -->
+    <main id="view-booking" hidden>
+      <div class="card token-hero">
+        <div class="k">BOOKING CONFIRMED</div>
+        <div class="n" id="bookDate" style="font-size:44px">–</div>
+        <div class="pos" id="bookPos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Items</span><span class="v" id="dItems"></span></div>
+        <div class="kv"><span class="k">Status</span><span class="v" id="dStatus"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Make another booking</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>TentQ</span>
+      <a href="admin.html">Tent house staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

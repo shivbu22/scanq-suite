@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PhysioQ — Staff Dashboard</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+
+  <!-- ============ PASSCODE LOCK ============ -->
+  <div class="wrap" id="view-lock" hidden>
+    <div class="lockwrap">
+      <div class="lock">
+        <span class="brandmark">Q</span>
+        <div class="n">PHYSIOQ · STAFF DASHBOARD</div>
+        <h1 class="page" style="margin-bottom:8px">Welcome back</h1>
+        <p class="sub" style="margin-bottom:22px">Enter your clinic passcode to continue.</p>
+        <input type="password" id="inPass" inputmode="numeric" autocomplete="off"
+               placeholder="••••" aria-label="Staff passcode" />
+        <div class="err" id="passErr" style="text-align:center;margin:10px 0 0">Wrong passcode. Try again.</div>
+        <div style="height:16px"></div>
+        <button class="btn primary" id="btnUnlock">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="wrap wide" id="view-dash" hidden>
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>PhysioQ</strong><small>Staff dashboard · <span id="todayLine">Today</span></small></span>
+      </div>
+      <div class="topactions">
+        <button class="btn ghost small" id="btnMute" aria-pressed="true">Sound on</button>
+        <button class="btn ghost small" id="btnPasscode">Passcode</button>
+        <span class="live"><i></i>Live</span>
+      </div>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n" id="stActive">0</div><div class="l">Active patients</div></div>
+      <div class="stat"><div class="n" id="stSessions">0</div><div class="l">Sessions done</div></div>
+      <div class="stat"><div class="n" id="stDone">0</div><div class="l">Packages complete</div></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="booked" aria-selected="true">Active<span class="c" id="cActive"></span></button>
+      <button role="tab" data-tab="done" aria-selected="false">Complete<span class="c" id="cDone"></span></button>
+      <button role="tab" data-tab="cancelled" aria-selected="false">Cancelled<span class="c" id="cCancelled"></span></button>
+    </div>
+
+    <div id="bookList"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="admin.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ReviewQ — Rate Your Visit</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>ReviewQ</strong><small><span data-shop-name>Sharma Sweets</span> · Rate your visit</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ RATING ============ -->
+    <main id="view-rate">
+      <h1 class="page">How was<br />your visit?</h1>
+      <p class="sub">Tap the stars — it takes two seconds and it really helps
+        <span data-shop-name>Sharma Sweets</span>.</p>
+
+      <div class="stars" id="stars" role="radiogroup" aria-label="Rate from 1 to 5 stars">
+        <button type="button" data-star="1" role="radio" aria-checked="false" aria-label="1 star">★</button>
+        <button type="button" data-star="2" role="radio" aria-checked="false" aria-label="2 stars">★</button>
+        <button type="button" data-star="3" role="radio" aria-checked="false" aria-label="3 stars">★</button>
+        <button type="button" data-star="4" role="radio" aria-checked="false" aria-label="4 stars">★</button>
+        <button type="button" data-star="5" role="radio" aria-checked="false" aria-label="5 stars">★</button>
+      </div>
+      <div class="star-label" id="starLabel"></div>
+
+      <div style="height:18px"></div>
+
+      <div>
+        <button type="button" class="btn primary" id="btnGoogle" disabled>Review us on Google</button>
+        <div class="progress" id="prog"><i></i></div>
+      </div>
+
+      <p class="hint" style="text-align:center;margin-top:18px">
+        No account needed. Your tap also gets counted on the shop's dashboard.
+      </p>
+    </main>
+
+    <!-- ============ THANKS ============ -->
+    <main id="view-thanks" hidden>
+      <div class="card" style="text-align:center;padding:44px 24px">
+        <div style="font-size:56px;line-height:1;color:var(--star)">★</div>
+        <div style="height:16px"></div>
+        <h1 class="page" style="margin-bottom:8px">Thanks for the love!</h1>
+        <p class="sub" id="thanksNote" style="margin-bottom:0">Your rating means a lot to us.</p>
+      </div>
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Rate another visit</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>ReviewQ</span>
+      <a href="admin.html">Shop owner? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

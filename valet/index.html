@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>ValetQ — Park Without the Wait</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>ValetQ</strong><small><span data-shop-name>ParkEasy Valet</span> · Valet parking</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ REQUEST FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Hand over your keys,<br />keep the evening.</h1>
+      <p class="sub">Request valet from your phone. We will park your car and bring it
+        back when you are ready to leave.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Request</strong><span>scan the QR, enter your car number</span></li>
+        <li><span class="stepn">2</span><strong>Hand keys</strong><span>we park it for you</span></li>
+        <li><span class="stepn">3</span><strong>Return</strong><span>your car comes back ready</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live car status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="valetForm" class="card stack" novalidate>
+        <div class="field" data-f="car">
+          <label class="lbl" for="inCar">Car number</label>
+          <input type="text" id="inCar" autocomplete="off" placeholder="e.g. DL 8C AB 1234"
+                 style="text-transform:uppercase" />
+          <div class="err">Please enter your car number.</div>
+        </div>
+
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="To reach you for key handover" />
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Request valet</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ VALET TICKET ============ -->
+    <main id="view-ticket" hidden>
+      <div class="card token-hero">
+        <div class="k">VALET TICKET</div>
+        <div style="display:flex;justify-content:center;margin:10px 0"><span class="plate" id="ticketPlate">–</span></div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Owner</span><span class="v" id="dName"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="requested"><span class="dot"></span><div><div class="t">Requested</div><div class="d">Valet is on the way to your car</div></div></li>
+          <li data-s="parked"><span class="dot"></span><div><div class="t">Parked</div><div class="d">Your car is safely parked. Enjoy your evening.</div></div></li>
+          <li data-s="returned"><span class="dot"></span><div><div class="t">Returned</div><div class="d">Car brought back. Drive safe.</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Request for another car</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>ValetQ</span>
+      <a href="admin.html">Valet staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

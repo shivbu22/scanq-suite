@@ -1,0 +1,73 @@
+/* ReviewQ theme — amber & white over the shared ScanQ design system. */
+:root {
+  --brand: #b45309;
+  --brand-deep: #92400e;
+  --brand-soft: #fef3c7;
+  --brand-mist: #fffbeb;
+  --star: #f59e0b;
+  --star-dim: #e5e0d5;
+}
+
+/* star picker */
+.stars {
+  display: flex; gap: 10px; justify-content: center;
+  margin: 26px 0 8px;
+}
+.stars button {
+  appearance: none; -webkit-appearance: none;
+  background: none; border: none; cursor: pointer;
+  font-size: 52px; line-height: 1; padding: 6px 4px;
+  color: var(--star-dim);
+  transition: transform 0.12s, color 0.12s;
+  -webkit-tap-highlight-color: transparent;
+}
+.stars button:hover { transform: scale(1.12); }
+.stars button.on { color: var(--star); text-shadow: 0 2px 10px rgba(245, 158, 11, 0.4); }
+.stars button:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 8px; }
+.star-label {
+  text-align: center; font-size: 17px; font-weight: 700; color: var(--brand-deep);
+  min-height: 26px; margin-bottom: 6px;
+}
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(180, 83, 9, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(180, 83, 9, 0.28); }
+
+/* 7-day bar chart (pure CSS bars) */
+.chart { display: flex; align-items: flex-end; gap: 10px; height: 170px; padding: 12px 4px 0; }
+.chart .bar {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  height: 100%; min-width: 0;
+}
+.chart .bar i {
+  display: block; width: 100%; max-width: 34px; border-radius: 7px 7px 3px 3px;
+  background: linear-gradient(180deg, var(--star), var(--brand));
+  min-height: 4px;
+  transition: height 0.3s;
+}
+.chart .bar.today i { background: linear-gradient(180deg, #fbbf24, #b45309); box-shadow: 0 2px 10px rgba(245, 158, 11, 0.45); }
+.chart .bar .c { font-size: 12px; font-weight: 800; color: var(--ink); margin-bottom: 4px; }
+.chart .bar .d { font-size: 11px; color: var(--faint); margin-top: 6px; font-weight: 600; }
+
+/* recent taps list */
+.taps { display: flex; flex-direction: column; gap: 8px; }
+.tap {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 1px solid var(--line); border-radius: 12px;
+  padding: 10px 14px; font-size: 14px;
+}
+.tap .s { color: var(--star); font-size: 16px; letter-spacing: 1px; }
+.tap .t { margin-left: auto; color: var(--faint); font-size: 12px; }
+
+/* settings rows */
+.setrow { display: flex; gap: 10px; align-items: stretch; }
+.setrow input { flex: 1; min-width: 0; }
+.hint { font-size: 13px; color: var(--faint); line-height: 1.55; margin-top: 10px; }
+.hint code { background: var(--brand-soft); padding: 1px 6px; border-radius: 6px; font-size: 12px; color: var(--brand-deep); }
+
+.avg-chip {
+  display: inline-flex; align-items: baseline; gap: 6px;
+  background: var(--brand-soft); color: var(--brand-deep);
+  font-weight: 800; font-size: 15px; padding: 8px 14px; border-radius: 999px;
+}
+.avg-chip .big { font-size: 22px; }

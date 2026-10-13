@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>HostelQ — Resident Portal</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>HostelQ</strong><small><span data-shop-name>Sunrise PG</span> · <span data-shop-sub>PG &amp; hostel portal</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <h1 class="page">Your room,<br />sorted.</h1>
+    <p class="sub">Check your dues and raise complaints from your phone —
+      no more chasing the warden.</p>
+
+    <div class="tabs" role="tablist" style="margin-top:18px">
+      <button role="tab" data-tab="dues" aria-selected="true">My Dues</button>
+      <button role="tab" data-tab="complaint" aria-selected="false">Raise Complaint</button>
+    </div>
+
+    <!-- ============ MY DUES ============ -->
+    <main id="view-dues">
+      <form id="duesForm" class="card stack" novalidate>
+        <div class="field" data-f="room">
+          <label class="lbl" for="inRoom">Room number</label>
+          <input type="text" id="inRoom" autocomplete="off" placeholder="e.g. 102" />
+          <div class="err">Please enter your room number.</div>
+        </div>
+        <button type="submit" class="btn primary" id="btnDues">Check my dues</button>
+      </form>
+
+      <div style="height:14px"></div>
+      <div id="duesResult"></div>
+    </main>
+
+    <!-- ============ RAISE COMPLAINT ============ -->
+    <main id="view-complaint" hidden>
+      <form id="complaintForm" class="card stack" novalidate>
+        <div class="field" data-f="room">
+          <label class="lbl" for="inCRoom">Room number</label>
+          <input type="text" id="inCRoom" autocomplete="off" placeholder="e.g. 102" />
+          <div class="err">Please enter your room number.</div>
+        </div>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inCName">Your name</label>
+          <input type="text" id="inCName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+        <div class="field" data-f="category">
+          <label class="lbl" for="inCCat">Category</label>
+          <select id="inCCat"></select>
+          <div class="err">Please choose a category.</div>
+        </div>
+        <div class="field" data-f="desc">
+          <label class="lbl" for="inCDesc">Describe the issue</label>
+          <textarea id="inCDesc" placeholder="What is wrong, and since when?"></textarea>
+          <div class="err">Please describe the issue.</div>
+        </div>
+        <div>
+          <button type="submit" class="btn primary" id="btnComplaint">Raise complaint</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+
+      <div style="height:14px"></div>
+      <div id="complaintResult"></div>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>HostelQ</span>
+      <a href="admin.html">Warden? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

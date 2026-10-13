@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>RecordQ — Clinic Dashboard</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+
+  <!-- ============ PASSCODE LOCK ============ -->
+  <div class="wrap" id="view-lock" hidden>
+    <div class="lockwrap">
+      <div class="lock">
+        <span class="brandmark">Q</span>
+        <div class="n">RECORDQ · CLINIC DASHBOARD</div>
+        <h1 class="page" style="margin-bottom:8px">Welcome back</h1>
+        <p class="sub" style="margin-bottom:22px">Enter your clinic passcode to continue.</p>
+        <input type="password" id="inPass" inputmode="numeric" autocomplete="off"
+               placeholder="••••" aria-label="Clinic passcode" />
+        <div class="err" id="passErr" style="text-align:center;margin:10px 0 0">Wrong passcode. Try again.</div>
+        <div style="height:16px"></div>
+        <button class="btn primary" id="btnUnlock">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="wrap wide" id="view-dash" hidden>
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>RecordQ</strong><small>Clinic dashboard · <span id="todayLine">Today</span></small></span>
+      </div>
+      <div class="topactions">
+        <button class="btn ghost small" id="btnPasscode">Passcode</button>
+        <span class="live"><i></i>Live</span>
+      </div>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n" id="stToday">0</div><div class="l">Visits today</div></div>
+      <div class="stat"><div class="n" id="stPatients">0</div><div class="l">Patients this month</div></div>
+    </div>
+
+    <!-- ============ NEW VISIT ============ -->
+    <div class="card" id="visitCard">
+      <h2 class="sec" style="margin-top:0">New visit</h2>
+      <form id="visitForm" class="stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Patient name</label>
+          <input type="text" id="inName" autocomplete="off" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter the patient's name.</div>
+        </div>
+        <div class="field" data-f="phone">
+          <label class="lbl" for="inPhone">Phone number</label>
+          <input type="tel" id="inPhone" autocomplete="off" inputmode="tel" placeholder="e.g. 98110 22334" />
+          <div class="err">Please enter a 10-digit phone number.</div>
+        </div>
+        <div class="field">
+          <label class="lbl" for="inDate">Visit date</label>
+          <input type="date" id="inDate" />
+        </div>
+        <div class="field">
+          <label class="lbl" for="inNotes">Doctor's notes</label>
+          <textarea id="inNotes" rows="3" placeholder="Diagnosis, advice, follow-up…"
+                    style="width:100%;font:inherit;font-size:16px;padding:12px 14px;border:1.5px solid var(--line);border-radius:var(--r-input);background:#fff;color:var(--ink);outline:none;resize:vertical"></textarea>
+        </div>
+        <div class="field">
+          <span class="lbl">Prescription photo <span style="color:var(--faint);font-weight:500">(optional)</span></span>
+          <div class="dropzone" id="dz" role="button" tabindex="0" aria-label="Add a prescription photo">
+            <div class="dz-title">Tap to add a photo</div>
+            <div class="dz-sub">JPG or PNG · up to <span data-max-mb>10</span> MB</div>
+          </div>
+          <input type="file" id="inFile" accept=".png,.jpg,.jpeg,.webp" hidden />
+          <div id="fileChip" hidden></div>
+        </div>
+        <div>
+          <button type="submit" class="btn primary" id="btnSave" style="max-width:340px">Save visit</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </div>
+
+    <div style="height:18px"></div>
+
+    <!-- ============ PATIENT SEARCH ============ -->
+    <h2 class="sec">Find a patient</h2>
+    <div class="card" style="margin-bottom:12px">
+      <div class="field" style="margin:0">
+        <input type="search" id="inSearch" autocomplete="off" inputmode="search"
+               placeholder="Search by name or phone…" />
+      </div>
+    </div>
+    <div id="searchList"></div>
+
+    <!-- ============ PATIENT TIMELINE ============ -->
+    <div id="patientPanel" hidden>
+      <div style="height:18px"></div>
+      <div class="card">
+        <div style="display:flex;gap:12px;align-items:center;margin-bottom:6px">
+          <div class="pav" id="ppAvatar" style="flex:none;width:48px;height:48px;border-radius:50%;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--display);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center">–</div>
+          <div style="flex:1">
+            <div id="ppName" style="font-weight:700;font-size:18px"></div>
+            <div id="ppPhone" style="font-size:13px;color:var(--muted)"></div>
+          </div>
+          <button class="btn primary small" id="btnAddVisit" style="width:auto">Add visit</button>
+        </div>
+        <div id="ppTimeline"></div>
+      </div>
+    </div>
+
+    <div style="height:18px"></div>
+
+    <!-- ============ TODAY'S VISITS ============ -->
+    <h2 class="sec">Today's visits</h2>
+    <div id="todayList"></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="admin.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

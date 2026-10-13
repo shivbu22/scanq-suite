@@ -1,0 +1,76 @@
+/* LoyaltyQ theme — rose/pink over the shared ScanQ design system. */
+:root {
+  --brand: #e0447c;
+  --brand-deep: #b02a5c;
+  --brand-soft: #fbe7f0;
+  --brand-mist: #fdf2f7;
+}
+
+/* stamp slots */
+.stamps {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin: 18px 0 6px;
+}
+.slot {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 700;
+  border: 2px dashed var(--line);
+  color: var(--faint);
+  background: var(--brand-mist);
+  transition: transform 0.15s, background 0.2s;
+}
+.slot.full {
+  border-style: solid;
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(224, 68, 124, 0.35);
+}
+.slot.pop { animation: stampPop 0.35s ease; }
+@keyframes stampPop {
+  0% { transform: scale(0.4); }
+  60% { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.stampcount { font-size: 15px; color: var(--dim); margin-top: 4px; }
+.stampcount strong { color: var(--brand-deep); font-size: 22px; }
+
+.reward-line {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--brand-soft);
+  border-radius: var(--r-card);
+  padding: 12px 14px;
+  margin-top: 14px;
+  font-size: 14px; color: var(--brand-deep); font-weight: 600;
+}
+.reward-line .gift {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--brand); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex: none;
+}
+
+/* mini progress bar for member rows */
+.minibar {
+  height: 6px; border-radius: 3px; background: var(--line);
+  overflow: hidden; margin-top: 6px;
+}
+.minibar i {
+  display: block; height: 100%; border-radius: 3px;
+  background: var(--brand);
+  transition: width 0.3s;
+}
+.minibar.full i { background: var(--brand-deep); }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(224, 68, 124, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(224, 68, 124, 0.28); }
+
+/* hidden must win over author display rules (.reward-line's flex, .demo-tag's
+   inline-block — same class of bug the suite fixed for .btn) */
+[hidden] { display: none !important; }

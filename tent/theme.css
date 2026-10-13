@@ -1,0 +1,66 @@
+/* TentQ theme — deep violet & white over the shared ScanQ design system. */
+:root {
+  --brand: #6b21a8;
+  --brand-deep: #4c1582;
+  --brand-soft: #f3e8ff;
+  --brand-mist: #faf5ff;
+  --board: #2b0f45;
+  --board-ink: #f3e8ff;
+  --board-dim: #cfaaf2;
+  --board-line: #5b21b6;
+}
+
+/* form select (shared CSS styles text inputs only) */
+select {
+  width: 100%;
+  font: inherit; font-size: 16px;
+  padding: 12px 38px 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-input);
+  background-color: #fff; color: var(--ink);
+  outline: none; appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236b21a8' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.field.invalid select { border-color: var(--bad); }
+
+/* date chips — scrollable 30-day picker */
+.daychips { display:flex; gap:8px; overflow-x:auto; padding:4px 2px 10px; scrollbar-width:thin; }
+.daychip {
+  flex:0 0 auto; min-width:64px; text-align:center; cursor:pointer;
+  border:1.5px solid var(--line); border-radius:var(--r-input);
+  padding:8px 6px; background:#fff; font:inherit;
+}
+.daychip .d { font-size:12px; color:var(--faint); display:block; }
+.daychip .n { font-size:18px; font-weight:700; display:block; }
+.daychip .m { font-size:11px; color:var(--faint); display:block; }
+.daychip[aria-pressed="true"] { border-color:var(--brand); background:var(--brand-soft); box-shadow:0 0 0 3px var(--brand-soft); }
+.field.invalid .daychips { border:1.5px dashed var(--bad); border-radius:var(--r-input); }
+
+/* item checklist — toggle pills */
+.itempills { display:flex; flex-wrap:wrap; gap:8px; }
+.itempill {
+  cursor:pointer; border:1.5px solid var(--line); border-radius:999px;
+  padding:9px 14px; background:#fff; font:inherit; font-size:14px; font-weight:600;
+}
+.itempill[aria-pressed="true"] { border-color:var(--brand); background:var(--brand); color:#fff; }
+.field.invalid .itempills { border:1.5px dashed var(--bad); border-radius:var(--r-input); padding:6px; }
+
+/* status chips for this app's statuses */
+.st.booked { background: var(--brand-soft); color: var(--brand-deep); }
+.st.done { background: var(--brand-deep); color: #fff; }
+.st.cancelled { background: #fee2e2; color: #b91c1c; }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(107, 33, 168, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(107, 33, 168, 0.28); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(76, 21, 130, 0.3); }
+
+/* counter board accents */
+.board .k, .board .next, .board .idle { color: var(--board-dim); }
+.board .who { color: var(--board-ink); }
+.board .next strong { color: #fff; }
+.board .blogo { color: var(--board-dim); border-color: var(--board-line); }

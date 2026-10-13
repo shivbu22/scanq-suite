@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>WaterQ — Water-can Subscriptions</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>WaterQ</strong><small><span data-shop-name>AquaFresh</span> · Water-can subscriptions</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ SUBSCRIBE FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Fresh water,<br />every morning.</h1>
+      <p class="sub">Subscribe for daily water-can delivery. We deliver to your
+        doorstep, you watch every delivery land here.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Subscribe</strong><span>pick your daily cans</span></li>
+        <li><span class="stepn">2</span><strong>We deliver</strong><span>every morning, on time</span></li>
+        <li><span class="stepn">3</span><strong>Track</strong><span>see deliveries and monthly total</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Daily delivery log</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="subForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For delivery updates" />
+        </div>
+
+        <div class="field" data-f="address">
+          <label class="lbl" for="inAddress">Delivery address</label>
+          <input type="text" id="inAddress" autocomplete="street-address" placeholder="Flat / house, street, area" />
+          <div class="err">Please enter your address.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl">Cans per day</label>
+          <div class="stepper">
+            <button type="button" id="qtyMinus" aria-label="Fewer cans">−</button>
+            <input id="inQty" value="1" inputmode="numeric" aria-label="Cans per day" />
+            <button type="button" id="qtyPlus" aria-label="More cans">+</button>
+            <span class="unit">cans / day</span>
+          </div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Start my subscription</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ SUBSCRIPTION STATUS ============ -->
+    <main id="view-sub" hidden>
+      <div class="card">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+          <h2 class="sec" style="margin:0" id="sName">—</h2>
+          <span class="st active" id="sStatus">Active</span>
+        </div>
+        <div class="kv"><span class="k">Subscription ID</span><span class="v" id="sId">—</span></div>
+        <div class="kv"><span class="k">Cans per day</span><span class="v" id="sDaily">—</span></div>
+        <div class="kv"><span class="k">Delivered today</span><span class="v" id="sToday">—</span></div>
+        <div class="kv"><span class="k">This month</span><span class="v" id="sMonth">—</span></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnSwitch">Use a different subscription</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>WaterQ</span>
+      <a href="admin.html">Delivery staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

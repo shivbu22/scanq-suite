@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>CoWorkQ — Book a Desk</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>CoWorkQ</strong><small><span data-shop-name>WorkNest</span> · <span data-shop-sub>Desk booking</span></small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ BOOKING FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Your desk,<br />booked in seconds.</h1>
+      <p class="sub">Pick a day and a desk that suits you. No phone calls,
+        no waiting — just walk in and work.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Pick a desk</strong><span>choose your day &amp; desk</span></li>
+        <li><span class="stepn">2</span><strong>Book it</strong><span>takes under a minute</span></li>
+        <li><span class="stepn">3</span><strong>Walk in</strong><span>your desk is held for you</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live availability</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="bookForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For reminders" />
+        </div>
+
+        <div class="field" data-f="date">
+          <span class="lbl">Day</span>
+          <div class="slotchips" id="dayChips" role="group" aria-label="Choose a day"></div>
+          <div class="err">Please pick a day.</div>
+        </div>
+
+        <div class="field" data-f="desk">
+          <span class="lbl">Desk</span>
+          <div class="timegrid" id="deskGrid" role="group" aria-label="Choose a desk"></div>
+          <div class="err">Please pick a desk.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Book my desk</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ CONFIRMATION ============ -->
+    <main id="view-booked" hidden>
+      <div class="card token-hero">
+        <div class="k">DESK BOOKED</div>
+        <div class="n" id="deskBig" style="font-size:56px">–</div>
+        <div class="pos" id="deskDateLine"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Status</span><span class="v" id="dStatus"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Book another desk</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>CoWorkQ</span>
+      <a href="admin.html">Staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

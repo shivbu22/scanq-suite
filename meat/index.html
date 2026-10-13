@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>MeatQ — Fresh Meat Order Queue</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>MeatQ</strong><small><span data-shop-name>FreshMeat Corner</span> · Fresh meat order queue</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ ORDER FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Fresh cuts,<br />zero waiting.</h1>
+      <p class="sub">Tick what you need, take an order number, and skip the counter line.
+        We will cut it fresh for you.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Tick items</strong><span>scan the QR at the counter</span></li>
+        <li><span class="stepn">2</span><strong>Get a number</strong><span>we start cutting right away</span></li>
+        <li><span class="stepn">3</span><strong>Collect</strong><span>when your order is ready</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live order status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="tokenForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Imran Sheikh" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the shop to reach you" />
+        </div>
+
+        <div class="field" data-f="items">
+          <label class="lbl">Items <span style="color:var(--faint);font-weight:500">(qty in kg, eggs by dozen)</span></label>
+          <div id="itemList"></div>
+          <div class="err">Please pick at least one item.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Get my order number</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ ORDER / STATUS ============ -->
+    <main id="view-token" hidden>
+      <div class="card token-hero">
+        <div class="k">YOUR ORDER</div>
+        <div class="n" id="tokenNum">–</div>
+        <div class="pos" id="queuePos"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Items</span><span class="v" id="dItems"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <h2 class="sec" style="margin-top:0">Status</h2>
+        <ul class="timeline" id="timeline">
+          <li data-s="queued"><span class="dot"></span><div><div class="t">New order</div><div class="d">Waiting for the shop to start cutting</div></div></li>
+          <li data-s="active"><span class="dot"></span><div><div class="t">Cutting</div><div class="d">Your meat is being cut now</div></div></li>
+          <li data-s="done"><span class="dot"></span><div><div class="t">Ready</div><div class="d">Ready for pickup. Show this screen at the counter.</div></div></li>
+        </ul>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Place another order</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>MeatQ</span>
+      <a href="admin.html">Shop staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

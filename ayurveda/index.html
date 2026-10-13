@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>AyurvedaQ — Clinic Appointments</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>AyurvedaQ</strong><small><span data-shop-name>Ayush Ayurveda</span> · Clinic appointments</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ BOOKING FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Natural healing,<br />one visit at a time.</h1>
+      <p class="sub">Book your ayurvedic consultation from your phone. Pick your concern,
+        choose a day, and we will confirm your slot.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Book</strong><span>scan the QR at the clinic</span></li>
+        <li><span class="stepn">2</span><strong>Visit</strong><span>come in on your day</span></li>
+        <li><span class="stepn">3</span><strong>Follow up</strong><span>we remind you of your next visit</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live appointment status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="bookForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Your name</label>
+          <input type="text" id="inName" autocomplete="name" placeholder="e.g. Ravi Menon" />
+          <div class="err">Please enter your name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For the clinic to reach you" />
+        </div>
+
+        <div class="field" data-f="concern">
+          <label class="lbl" for="inConcern">Health concern</label>
+          <select id="inConcern"></select>
+          <div class="err">Please choose a concern.</div>
+        </div>
+
+        <div class="field" data-f="date">
+          <label class="lbl">Visit day</label>
+          <div class="daychips" id="dayChips" role="group" aria-label="Visit day"></div>
+          <div class="err">Please pick a day.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Book appointment</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ APPOINTMENT CONFIRMATION ============ -->
+    <main id="view-booked" hidden>
+      <div class="card token-hero">
+        <div class="k">APPOINTMENT</div>
+        <div class="n" id="apptDay">–</div>
+        <div class="pos" id="apptSub"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Name</span><span class="v" id="dName"></span></div>
+        <div class="kv"><span class="k">Concern</span><span class="v" id="dConcern"></span></div>
+        <div class="kv"><span class="k">Status</span><span class="v"><span class="statuschip" id="dStatus">Booked</span></span></div>
+        <div class="kv" id="rowFollowup" hidden><span class="k">Follow-up</span><span class="v" id="dFollowup"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Book another appointment</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>AyurvedaQ</span>
+      <a href="admin.html">Clinic staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

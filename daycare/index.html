@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>DaycareQ — Child Check-in</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>DaycareQ</strong><small><span data-shop-name>Little Stars Daycare</span> · Child check-in &amp; check-out</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ CHECK-IN FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Drop off,<br />peace of mind.</h1>
+      <p class="sub">Check your child in from your phone. Watch their status live —
+        inside with us, or checked out and on the way home.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Check in</strong><span>child + parent details</span></li>
+        <li><span class="stepn">2</span><strong>Relax</strong><span>live status on your phone</span></li>
+        <li><span class="stepn">3</span><strong>Pick up</strong><span>staff check them out</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live inside status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="checkinForm" class="card stack" novalidate>
+        <div class="field" data-f="child">
+          <label class="lbl" for="inChild">Child's name</label>
+          <input type="text" id="inChild" autocomplete="off" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter the child's name.</div>
+        </div>
+
+        <div class="field" data-f="parent">
+          <label class="lbl" for="inParent">Parent name</label>
+          <input type="text" id="inParent" autocomplete="name" placeholder="e.g. Priya Mehta" />
+          <div class="err">Please enter the parent's name.</div>
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inPhone">Phone <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="In case we need to reach you" />
+        </div>
+
+        <div class="field">
+          <label class="lbl" for="inNote">Note <span style="color:var(--faint);font-weight:500">(optional)</span></label>
+          <textarea id="inNote" placeholder="Allergies, lunch box, pickup person…"></textarea>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Check in now</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ CHECK-IN PASS ============ -->
+    <main id="view-pass" hidden>
+      <div class="card token-hero">
+        <div class="k">CHECKED IN</div>
+        <div class="n" style="font-size:34px;line-height:1.25" id="pChild">—</div>
+        <div class="pos" id="pStatus"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Parent</span><span class="v" id="pParent"></span></div>
+        <div class="kv"><span class="k">Checked in</span><span class="v" id="pIn"></span></div>
+        <div class="kv"><span class="k">Checked out</span><span class="v" id="pOut"></span></div>
+        <div class="kv"><span class="k">Note</span><span class="v" id="pNote"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnNew">Check in another child</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>DaycareQ</span>
+      <a href="admin.html">Daycare staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

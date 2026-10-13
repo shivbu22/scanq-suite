@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>LoyaltyQ — Staff Dashboard</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+
+  <!-- ============ PASSCODE LOCK ============ -->
+  <div class="wrap" id="view-lock" hidden>
+    <div class="lockwrap">
+      <div class="lock">
+        <span class="brandmark">Q</span>
+        <div class="n">LOYALTYQ · SHOP DASHBOARD</div>
+        <h1 class="page" style="margin-bottom:8px">Welcome back</h1>
+        <p class="sub" style="margin-bottom:22px">Enter your shop passcode to continue.</p>
+        <input type="password" id="inPass" inputmode="numeric" autocomplete="off"
+               placeholder="••••" aria-label="Shop passcode" />
+        <div class="err" id="passErr" style="text-align:center;margin:10px 0 0">Wrong passcode. Try again.</div>
+        <div style="height:16px"></div>
+        <button class="btn primary" id="btnUnlock">Unlock</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ DASHBOARD ============ -->
+  <div class="wrap wide" id="view-dash" hidden>
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>LoyaltyQ</strong><small>Shop dashboard · <span id="todayLine">Today</span></small></span>
+      </div>
+      <div class="topactions">
+        <button class="btn ghost small" id="btnPasscode">Passcode</button>
+        <span class="live"><i></i>Live</span>
+      </div>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="n" id="stMembers">0</div><div class="l">New members today</div></div>
+      <div class="stat"><div class="n" id="stStamps">0</div><div class="l">Stamps given today</div></div>
+      <div class="stat"><div class="n" id="stRewards">0</div><div class="l">Rewards redeemed today</div></div>
+    </div>
+
+    <!-- ============ COUNTER: phone lookup + stamp ============ -->
+    <div class="card stack" style="margin-bottom:18px">
+      <h2 class="sec" style="margin-top:0">Counter — give a stamp</h2>
+      <div class="field" data-f="lkPhone">
+        <label class="lbl" for="inLkPhone">Customer phone</label>
+        <input type="tel" id="inLkPhone" inputmode="tel" autocomplete="off" placeholder="e.g. 98110 22334" />
+        <div class="err">Please enter a phone number.</div>
+      </div>
+      <div class="field" data-f="lkName" id="lkNameWrap" hidden>
+        <label class="lbl" for="inLkName">New member name</label>
+        <input type="text" id="inLkName" autocomplete="off" placeholder="e.g. Aarav Mehta" />
+        <div class="err">Please enter the member's name.</div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn primary" id="btnLookup" style="width:auto">Find member</button>
+      </div>
+      <div id="memberCard"></div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" data-tab="members" aria-selected="true">Members<span class="c" id="cMembers"></span></button>
+      <button role="tab" data-tab="activity" aria-selected="false">Recent activity</button>
+    </div>
+
+    <div id="tab-members">
+      <div class="field" style="margin-bottom:12px">
+        <input type="search" id="inSearch" autocomplete="off" placeholder="Search name or phone…" />
+      </div>
+      <div id="memberList"></div>
+    </div>
+
+    <div id="tab-activity" hidden>
+      <div id="eventList"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="admin.js"></script>
+  <script>
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

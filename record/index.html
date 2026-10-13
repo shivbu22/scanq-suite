@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>RecordQ — My Visit History</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>RecordQ</strong><small><span data-shop-name>City Care Clinic</span> · Patient records</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ PHONE LOOKUP ============ -->
+    <main id="view-lookup">
+      <h1 class="page">Your visits,<br />in one place.</h1>
+      <p class="sub">Enter the phone number you gave at the clinic to see
+        your visit history — dates, doctor's notes and prescriptions.</p>
+
+      <form id="lookupForm" class="card stack" novalidate>
+        <div class="field" data-f="phone">
+          <label class="lbl" for="inPhone">Phone number</label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel"
+                 placeholder="e.g. 98110 22334" />
+          <div class="err">Please enter a 10-digit phone number.</div>
+        </div>
+        <div>
+          <button type="submit" class="btn primary" id="btnLookup">View my records</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+
+      <div class="priv">
+        <span aria-hidden="true">🔒</span>
+        <div><b>Private by design.</b> These records are only shown to someone
+        who enters this exact phone number. Nothing here is shared or published.</div>
+      </div>
+    </main>
+
+    <!-- ============ VISIT TIMELINE ============ -->
+    <main id="view-record" hidden>
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;gap:12px;align-items:center">
+          <div class="pav" id="recAvatar" style="flex:none;width:48px;height:48px;border-radius:50%;background:var(--brand-soft);color:var(--brand-deep);font-family:var(--display);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center">–</div>
+          <div>
+            <div id="recName" style="font-weight:700;font-size:18px"></div>
+            <div id="recPhone" style="font-size:13px;color:var(--muted)"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="sec">Visit history</h2>
+      <div class="card" id="visitList"></div>
+
+      <div style="height:16px"></div>
+      <button class="btn ghost block" id="btnAgain">Look up a different number</button>
+
+      <div class="priv">
+        <span aria-hidden="true">🔒</span>
+        <div><b>Private by design.</b> Only you can see this with your number.
+        Found a mistake? Tell the clinic at your next visit.</div>
+      </div>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>RecordQ</span>
+      <a href="admin.html">Clinic staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

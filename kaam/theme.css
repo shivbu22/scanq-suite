@@ -1,0 +1,57 @@
+/* KaamQ theme — orange & white over the shared ScanQ design system. */
+:root {
+  --brand: #d9681c;
+  --brand-deep: #a34d0f;
+  --brand-soft: #fdeede;
+  --brand-mist: #fff8f1;
+}
+
+/* form select + textarea (shared CSS styles text inputs only) */
+select, textarea {
+  width: 100%;
+  font: inherit; font-size: 16px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-input);
+  background-color: #fff; color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+select {
+  padding-right: 38px;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23a34d0f' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+textarea { resize: vertical; min-height: 76px; }
+select:focus, textarea:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+.field.invalid select, .field.invalid textarea { border-color: var(--bad); }
+
+/* status chips for this app's statuses */
+.st.queued { background: var(--brand-soft); color: var(--brand-deep); }
+.st.assigned { background: #e3ecfd; color: #2456a8; }
+.st.arrived { background: #e7f6ec; color: #1c7a3d; }
+.st.done { background: var(--brand-deep); color: #fff; }
+.st.cancelled { background: #f1f1f1; color: #777; }
+
+/* technician assign row on queued cards */
+.assignrow { display: flex; gap: 8px; margin-top: 10px; }
+.assignrow input {
+  flex: 1; font: inherit; font-size: 15px;
+  padding: 10px 12px;
+  border: 1.5px solid var(--line); border-radius: var(--r-input);
+  outline: none;
+}
+.assignrow input:focus { border-color: var(--brand); box-shadow: 0 0 0 3px var(--brand-soft); }
+
+/* job reference code */
+.refcode {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 28px; font-weight: 700; letter-spacing: 2px;
+  color: var(--brand-deep);
+}
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(217, 104, 28, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(217, 104, 28, 0.28); }

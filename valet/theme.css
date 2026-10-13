@@ -1,0 +1,33 @@
+/* ValetQ theme — dark bronze & white over the shared ScanQ design system. */
+:root {
+  --brand: #713F12;
+  --brand-deep: #4a2c0a;
+  --brand-soft: #f7edda;
+  --brand-mist: #fbf6ea;
+  --board: #2b1c07;
+  --board-ink: #f6e8cd;
+  --board-dim: #d9b87c;
+  --board-line: #6b4a1e;
+}
+
+/* status chips for this app's statuses */
+.st.requested { background: var(--brand-soft); color: var(--brand-deep); }
+.st.parked { background: var(--warn-soft); color: var(--warn); }
+.st.returned { background: var(--brand-deep); color: #fff; }
+.st.cancelled { background: var(--line); color: var(--muted); }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(113, 63, 18, 0.3); }
+.btn.primary { box-shadow: 0 4px 14px rgba(113, 63, 18, 0.3); }
+.seg button[aria-pressed="true"] { box-shadow: 0 2px 6px rgba(74, 44, 10, 0.32); }
+
+/* big car-number plates */
+.plate {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  font-weight: 700; font-size: 40px; letter-spacing: 1px;
+  background: #fff; color: var(--ink);
+  border: 2px solid var(--ink); border-radius: 10px;
+  padding: 8px 18px; text-transform: uppercase;
+  box-shadow: 0 2px 0 var(--ink);
+}
+.plate.small { font-size: 24px; padding: 6px 12px; }

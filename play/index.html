@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>PlayQ — Kids Play Area Entry</title>
+  <link rel="stylesheet" href="../shared/styles.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="wrap">
+    <header class="top">
+      <div class="brand">
+        <span class="brandmark">Q</span>
+        <span class="brandtext"><strong>PlayQ</strong><small><span data-shop-name>FunZone Play Area</span> · Kids play area</small></span>
+      </div>
+      <span class="demo-tag" data-demo-tag hidden>DEMO</span>
+    </header>
+
+    <div class="cfg-warn" data-cfg-warn hidden>
+      Not connected yet. Add your Supabase URL and anon key in <code>config.js</code>,
+      or open with <code>?demo=1</code> to preview.
+    </div>
+
+    <!-- ============ CHECK-IN FORM ============ -->
+    <main id="view-form">
+      <h1 class="page">Play time,<br />zero paperwork.</h1>
+      <p class="sub">Check your child in from your phone. We keep the entry log live
+        so pickup is quick and safe.</p>
+
+      <ol class="steps">
+        <li><span class="stepn">1</span><strong>Check in</strong><span>scan the QR at the entrance</span></li>
+        <li><span class="stepn">2</span><strong>Play</strong><span>your child is logged inside</span></li>
+        <li><span class="stepn">3</span><strong>Pick up</strong><span>show the pass at the gate</span></li>
+      </ol>
+
+      <ul class="trustrow">
+        <li><b>✓</b> No app needed</li>
+        <li><b>✓</b> Live inside status</li>
+        <li><b>✓</b> Free to use</li>
+      </ul>
+
+      <div style="height:22px"></div>
+
+      <form id="entryForm" class="card stack" novalidate>
+        <div class="field" data-f="name">
+          <label class="lbl" for="inName">Child's name</label>
+          <input type="text" id="inName" autocomplete="off" placeholder="e.g. Aarav Mehta" />
+          <div class="err">Please enter the child's name.</div>
+        </div>
+
+        <div class="field" data-f="phone">
+          <label class="lbl" for="inPhone">Parent's phone</label>
+          <input type="tel" id="inPhone" autocomplete="tel" inputmode="tel" placeholder="For pickup verification" />
+          <div class="err">Please enter a phone number.</div>
+        </div>
+
+        <div>
+          <button type="submit" class="btn primary" id="btnSubmit">Check in</button>
+          <div class="progress" id="prog"><i></i></div>
+        </div>
+      </form>
+    </main>
+
+    <!-- ============ ENTRY PASS ============ -->
+    <main id="view-pass" hidden>
+      <div class="card token-hero">
+        <div class="k">ENTRY PASS</div>
+        <div class="n" id="passName" style="font-size:44px;line-height:1.15">–</div>
+        <div class="pos" id="passStatus"></div>
+      </div>
+
+      <div style="height:14px"></div>
+
+      <div class="card">
+        <div class="kv"><span class="k">Parent phone</span><span class="v" id="dPhone"></span></div>
+        <div class="kv"><span class="k">Checked in</span><span class="v" id="dCheckin"></span></div>
+        <div class="kv"><span class="k">Time inside</span><span class="v" id="dElapsed"></span></div>
+      </div>
+
+      <div style="height:14px"></div>
+      <button class="btn ghost block" id="btnAgain">Check in another child</button>
+    </main>
+
+    <footer class="foot">
+      <span class="fbrand"><span class="brandmark">Q</span>PlayQ</span>
+      <a href="admin.html">Staff? Open dashboard</a>
+    </footer>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <script type="module" src="app.js"></script>
+  <script>
+    // If the module above never booted (e.g. page opened via file://),
+    // tell the user why instead of failing silently.
+    setTimeout(function () {
+      if (window.__sqBoot) return;
+      var t = document.getElementById("toast");
+      t.textContent = "Preview tip: serve this folder over HTTP (deployed URL, or run: python3 -m http.server) — it does not run from file://.";
+      t.classList.add("show");
+    }, 2500);
+  </script>
+</body>
+</html>

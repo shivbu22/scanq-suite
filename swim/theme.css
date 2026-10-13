@@ -1,0 +1,35 @@
+/* SwimQ theme — deep blue & white over the shared ScanQ design system. */
+:root {
+  --brand: #1e40af;
+  --brand-deep: #1e3a8a;
+  --brand-soft: #dbeafe;
+  --brand-mist: #eff6ff;
+}
+
+/* status chips for this app's statuses */
+.st.booked { background: var(--brand-soft); color: var(--brand-deep); }
+.st.done { background: var(--brand-deep); color: #fff; }
+.st.cancelled { background: var(--line); color: var(--muted); }
+.st.no_show { background: var(--warn-soft); color: var(--warn); }
+
+/* polish: brand-tinted shadows instead of the shared green ones */
+.brandmark { box-shadow: 0 2px 8px rgba(30, 64, 175, 0.28); }
+.btn.primary { box-shadow: 0 4px 14px rgba(30, 64, 175, 0.28); }
+
+/* day + time slot chips */
+.slotchips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+.slotchips::-webkit-scrollbar { display: none; }
+.slotchip {
+  flex: none; border: 1.5px solid var(--line); background: #fff;
+  border-radius: 14px; padding: 10px 14px; cursor: pointer;
+  font: inherit; font-size: 14px; font-weight: 600; color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.slotchip small { font-size: 11.5px; font-weight: 500; color: var(--muted); }
+.slotchip[aria-pressed="true"] { border-color: var(--brand-deep); background: var(--brand-soft); color: var(--brand-deep); }
+.slotchip[aria-pressed="true"] small { color: var(--brand-deep); }
+.slotchip:disabled { opacity: 0.38; cursor: not-allowed; text-decoration: line-through; }
+.timegrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.timegrid .slotchip { padding: 12px 6px; }
+@media (max-width: 380px) { .timegrid { grid-template-columns: repeat(3, 1fr); } }
